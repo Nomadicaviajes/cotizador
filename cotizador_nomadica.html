@@ -8,37 +8,25 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Arial,sans-serif;background:#f0ebe2;color:#222;font-size:14px}
 :root{--brand:#1b3a5c;--header:#374d57;--accent:#c8881a;--border:#d4cfc6;--radius:10px;--green:#1a6e35}
-.app{max-width:960px;margin:0 auto;padding:14px}
-
-/* HEADER */
+.app{max-width:980px;margin:0 auto;padding:14px}
 header{background:var(--header);border-radius:var(--radius);margin-bottom:14px;padding:12px 20px;display:flex;align-items:center;justify-content:space-between}
 header img{height:44px;object-fit:contain}
 .hdr-right{text-align:right;color:rgba(255,255,255,.75);font-size:11px;line-height:1.7}
-
-/* TABS */
-.tabs{display:flex;gap:8px;margin-bottom:14px}
+.tabs{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
 .tab{padding:7px 16px;border-radius:20px;border:1.5px solid var(--border);background:#fff;cursor:pointer;font-size:13px;font-weight:600;color:#555}
 .tab.active{background:var(--brand);color:#fff;border-color:var(--brand)}
-
-/* CARDS */
 .card{background:#fff;border-radius:var(--radius);border:1px solid var(--border);padding:14px;margin-bottom:12px}
-.card-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.card-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px}
 .card-title{font-size:13px;font-weight:700;color:var(--brand)}
-
-/* GRID */
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
 .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px}
 .g4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:9px}
-@media(max-width:580px){.g2,.g3,.g4{grid-template-columns:1fr 1fr}}
-
-/* FIELDS */
+@media(max-width:600px){.g2,.g3,.g4{grid-template-columns:1fr 1fr}}
 .f{display:flex;flex-direction:column;gap:3px}
 .f label{font-size:11px;font-weight:700;color:#666;text-transform:uppercase;letter-spacing:.3px}
 input,select,textarea{width:100%;padding:6px 9px;border:1px solid var(--border);border-radius:6px;font-size:13px;font-family:Arial,sans-serif;background:#fff;color:#222}
 input:focus,select:focus,textarea:focus{outline:2px solid var(--brand);border-color:transparent}
 input[readonly]{background:#f0ebe2;color:#555}
-
-/* BUTTONS */
 .btn{display:inline-flex;align-items:center;gap:5px;padding:6px 13px;border-radius:6px;border:1.5px solid transparent;cursor:pointer;font-size:12px;font-weight:700;font-family:Arial,sans-serif}
 .btn-primary{background:var(--brand);color:#fff}
 .btn-accent{background:var(--accent);color:#fff}
@@ -46,24 +34,17 @@ input[readonly]{background:#f0ebe2;color:#555}
 .btn-green{background:#fff;border-color:#1a8c3e;color:#1a6e35}
 .btn-danger{background:#fff0f0;border-color:#fcc;color:#c33}
 .btn-sm{padding:4px 9px;font-size:11px}
-
-/* SERVICE BLOCKS */
 .sblock{border:1px solid var(--border);border-radius:8px;padding:11px;margin-bottom:9px;background:#faf8f4}
-.sblock-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}
+.sblock-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;flex-wrap:wrap;gap:6px}
 .sblock-title{font-size:12px;font-weight:700;color:var(--brand)}
 .rm-btn{background:none;border:none;cursor:pointer;color:#c33;font-size:16px;line-height:1;padding:0 4px}
-
-/* RESULT BOXES */
 .rbox{background:#eaf2fb;border:1px solid #bed4ea;border-radius:7px;padding:9px 11px;margin-top:8px}
 .rrow{display:flex;justify-content:space-between;font-size:12px;padding:2px 0;border-bottom:1px solid rgba(0,0,0,.06)}
 .rrow:last-child{border-bottom:none}
 .rrow.rtotal{font-weight:700;font-size:14px;border-top:1px solid #bed4ea;margin-top:3px;padding-top:5px}
 .rrow.rprofit{color:var(--green);font-weight:700}
-.rrow.rtransfer{color:#555;font-style:italic}
-
-/* SUMMARY */
 .sh-card{border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:12px}
-.sh-hdr{background:var(--brand);color:#fff;padding:8px 13px;font-size:13px;font-weight:700;display:flex;justify-content:space-between;align-items:center}
+.sh-hdr{background:var(--brand);color:#fff;padding:8px 13px;font-size:13px;font-weight:700;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:4px}
 .sh-hdr span{background:var(--accent);font-size:11px;padding:2px 8px;border-radius:10px}
 .srow{display:flex;justify-content:space-between;padding:6px 13px;font-size:13px;border-bottom:1px solid #f0ece6}
 .srow:last-child{border-bottom:none}
@@ -71,22 +52,24 @@ input[readonly]{background:#f0ebe2;color:#555}
 .srow.stransfer{background:#fdf8f0;color:#7a5010;font-size:12px}
 .srow.sprofit{background:#eaf5ee;color:var(--green);font-weight:700}
 .srow.sdiscount{color:#c33}
-
-/* IMAGE UPLOAD */
-.img-drop{border:2px dashed var(--border);border-radius:7px;padding:14px;text-align:center;color:#999;font-size:12px;cursor:pointer;position:relative;margin-top:7px}
+.srow.ssub{background:#f8f8f8;color:#666;font-size:12px;font-style:italic}
+.dest-block{border:2px solid var(--brand);border-radius:10px;padding:13px;margin-bottom:14px;background:#f8f6f2}
+.dest-title{font-size:13px;font-weight:700;color:var(--brand);margin-bottom:11px;display:flex;align-items:center;justify-content:space-between}
+.img-drop{border:2px dashed var(--border);border-radius:7px;padding:12px;text-align:center;color:#999;font-size:12px;cursor:pointer;position:relative;margin-top:6px}
 .img-drop:hover{border-color:var(--brand);background:#eaf2fb;color:var(--brand)}
 .img-drop input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
 .img-prev{width:100%;border-radius:6px;margin-top:7px;border:1px solid var(--border);display:none}
-
-/* HISTORY */
-.hist-item{border:1px solid var(--border);border-radius:8px;padding:9px 13px;margin-bottom:7px;display:flex;align-items:center;justify-content:space-between;background:#fff;cursor:pointer}
+.hist-item{border:1px solid var(--border);border-radius:8px;padding:9px 13px;margin-bottom:7px;display:flex;align-items:center;justify-content:space-between;background:#fff}
 .hist-item:hover{border-color:var(--brand);background:#eaf2fb}
-
-/* MODAL */
+.tipo-toggle{display:flex;gap:0;border:1.5px solid var(--border);border-radius:8px;overflow:hidden;background:#fff}
+.tipo-toggle button{border:none;background:transparent;padding:7px 16px;font-size:13px;font-weight:600;cursor:pointer;color:#555;transition:all .15s}
+.tipo-toggle button.active{background:var(--brand);color:#fff}
+.combo-badge{display:inline-block;background:#e8f4e8;color:#1a6e35;border:1px solid #b8dbb8;border-radius:6px;padding:2px 9px;font-size:11px;font-weight:700;margin-left:8px}
 #waModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999;align-items:center;justify-content:center}
 #waModal.open{display:flex}
 .wa-box{background:#fff;border-radius:12px;padding:18px;width:95%;max-width:580px;max-height:88vh;display:flex;flex-direction:column;gap:10px}
 .wa-box textarea{font-size:12px;font-family:monospace;resize:vertical;border:1px solid var(--border);border-radius:7px;padding:9px;line-height:1.65;flex:1;min-height:300px}
+.divider{border:none;border-top:1px dashed var(--border);margin:10px 0}
 </style>
 </head>
 <body>
@@ -95,7 +78,7 @@ input[readonly]{background:#f0ebe2;color:#555}
 <header>
   <img src="https://raw.githubusercontent.com/Nomadicaviajes/cotizador/main/5.%20fondo%20para%20voucher.png"
        alt="Nomádica Viajes"
-       onerror="this.outerHTML='<div style=\'color:#fff;font-size:20px;font-weight:900;letter-spacing:3px\'>NOMÁDICA<div style=\'font-size:9px;color:#c8881a;letter-spacing:4px;margin-top:-2px\'>VIAJES</div></div>'">
+       onerror="this.outerHTML='<div style=\'color:#fff;font-size:20px;font-weight:900;letter-spacing:3px\'>NOMÁDICA<div style=\'font-size:9px;color:#c8881a;letter-spacing:4px\'>VIAJES</div></div>'">
   <div class="hdr-right" id="hdrInfo">Internacional · USD<br>nomadicaviajes.com.ar</div>
 </header>
 
@@ -108,11 +91,15 @@ input[readonly]{background:#f0ebe2;color:#555}
 <!-- ===== TAB COTIZAR ===== -->
 <div id="tab-cotizar">
 
+  <!-- DATOS DEL VIAJE -->
   <div class="card">
     <div class="card-hdr">
       <div class="card-title">&#128205; Datos del viaje</div>
-      <div style="display:flex;gap:7px;align-items:center">
-        <label style="font-size:11px;font-weight:700;color:#666">TIPO:</label>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+        <div class="tipo-toggle">
+          <button id="btnSimple" class="active" onclick="setModo('simple')">Viaje simple</button>
+          <button id="btnCombo" onclick="setModo('combo')">Viaje combinado</button>
+        </div>
         <select id="tipoViaje" style="width:auto" onchange="updateTipo()">
           <option value="int">Internacional (USD)</option>
           <option value="nac">Nacional (ARS)</option>
@@ -121,11 +108,11 @@ input[readonly]{background:#f0ebe2;color:#555}
     </div>
     <div class="g3">
       <div class="f"><label>Cliente</label><input id="cliente" type="text" placeholder="Nombre del cliente"></div>
-      <div class="f"><label>Destino</label><input id="destino" type="text" placeholder="Destino"></div>
+      <div class="f"><label>Destino principal</label><input id="destino" type="text" placeholder="Ej: Caribe, Europa..."></div>
       <div class="f"><label>Vendedor</label><input id="vendedor" type="text" placeholder="Nombre del vendedor"></div>
       <div class="f"><label>Fecha salida</label><input id="fechaSalida" type="date"></div>
       <div class="f"><label>Fecha regreso</label><input id="fechaRegreso" type="date"></div>
-      <div class="f"><label>Noches</label><input id="noches" type="text" readonly></div>
+      <div class="f"><label>Noches totales</label><input id="noches" type="text" readonly></div>
     </div>
     <div class="g4" style="margin-top:9px">
       <div class="f"><label>Adultos (+12)</label><input id="adultos" type="number" min="0" value="2"></div>
@@ -144,24 +131,17 @@ input[readonly]{background:#f0ebe2;color:#555}
       </label>
     </div>
     <div id="aereoFields" style="display:none">
-      <div class="g3">
-        <div class="f"><label>Aerolinea</label><input id="aerolinea" type="text" placeholder="Ej: LATAM Airlines"></div>
-        <div class="f"><label>Costo total (<span class="mL">USD</span>)</label><input id="aereoNeto" type="number" min="0" placeholder="0" step="0.01"></div>
-        <div class="f"><label>Margen de ganancia</label><select id="aereoMargen"></select></div>
-      </div>
-      <div class="f" style="margin-top:8px"><label>Detalle del vuelo</label>
-        <textarea id="aereoDetalle" rows="2" placeholder="Ej: GRU - BUE, horarios, equipaje incluido..."></textarea>
-      </div>
-      <div style="margin-top:8px">
-        <label style="font-size:11px;font-weight:700;color:#666">IMAGEN DEL ITINERARIO (captura de pantalla)</label>
+      <div id="aereosWrap"></div>
+      <button class="btn btn-ghost btn-sm" onclick="addAereo()" style="margin-top:4px">+ Agregar vuelo</button>
+      <div style="margin-top:10px">
+        <label style="font-size:11px;font-weight:700;color:#666">IMAGEN DEL ITINERARIO</label>
         <div class="img-drop" id="aereoDropArea">
           <input type="file" accept="image/*" onchange="loadImgFile(event)">
-          [foto] Clic para seleccionar · arrastra · o pega con Ctrl+V / Cmd+V
+          [foto] Clic · arrastrá · o pegá con Ctrl+V
         </div>
         <img id="aereoImgPrev" class="img-prev">
         <button id="aereoImgClear" class="btn btn-danger btn-sm" style="display:none;margin-top:5px" onclick="clearImg()">X Quitar imagen</button>
       </div>
-      <div id="aereoResult" class="rbox" style="display:none;margin-top:9px"></div>
     </div>
   </div>
 
@@ -174,11 +154,13 @@ input[readonly]{background:#f0ebe2;color:#555}
     <div id="trasladosWrap"></div>
   </div>
 
-  <!-- HOTELES -->
-  <div class="card">
+  <!-- DESTINOS / HOTELES -->
+  <div class="card" id="cardHoteles">
     <div class="card-hdr">
-      <div class="card-title">&#127970; Hoteles</div>
-      <button class="btn btn-ghost btn-sm" onclick="addHotel()">+ Agregar opción</button>
+      <div class="card-title" id="hotelCardTitle">&#127970; Hoteles</div>
+      <div style="display:flex;gap:7px;align-items:center" id="hotelCardBtns">
+        <button class="btn btn-ghost btn-sm" onclick="addHotelSimple()">+ Agregar opción</button>
+      </div>
     </div>
     <div id="hotelesWrap"></div>
   </div>
@@ -246,7 +228,7 @@ input[readonly]{background:#f0ebe2;color:#555}
     </div>
   </div>
 
-  <div style="display:flex;gap:9px;justify-content:flex-end;margin-top:4px">
+  <div style="display:flex;gap:9px;justify-content:flex-end;margin-top:4px;flex-wrap:wrap">
     <button class="btn btn-ghost" onclick="limpiar()">Limpiar todo</button>
     <button class="btn btn-ghost" onclick="showTab('resumen')">Ver resumen</button>
     <button class="btn btn-primary" onclick="guardar()">Guardar cotizacion</button>
@@ -258,7 +240,7 @@ input[readonly]{background:#f0ebe2;color:#555}
   <div class="card">
     <div class="card-hdr">
       <div class="card-title">&#128202; Resumen de cotizacion</div>
-      <div style="display:flex;gap:8px">
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
         <button class="btn btn-green" onclick="generarWA()">WhatsApp</button>
         <button class="btn btn-accent" onclick="generarPDF()">Descargar PDF</button>
       </div>
@@ -278,7 +260,7 @@ input[readonly]{background:#f0ebe2;color:#555}
   </div>
 </div>
 
-</div><!-- /app -->
+</div>
 
 <!-- WHATSAPP MODAL -->
 <div id="waModal">
@@ -296,382 +278,485 @@ input[readonly]{background:#f0ebe2;color:#555}
 </div>
 
 <script>
-// ─── STATE ───────────────────────────────────────────
-var MON = 'USD';
-var tIdx=0, hIdx=0, sIdx=0;
-var traslados=[], hoteles=[], servicios=[];
-var aereoImgData = null;
+var MON='USD', modo='simple';
+var aIdx=0,tIdx=0,hIdx=0,sIdx=0,dIdx=0;
+var aereos=[],traslados=[],hoteles=[],servicios=[],destinos=[];
+var aereoImgData=null;
 
-// ─── HELPERS ─────────────────────────────────────────
-function $(id){ return document.getElementById(id); }
-function val(id){ return parseFloat($(id).value)||0; }
-function fmt(n){ return (Math.round((+n||0)*100)/100).toLocaleString('es-AR',{minimumFractionDigits:0,maximumFractionDigits:2}); }
+function $(id){return document.getElementById(id);}
+function val(id){return parseFloat($(id)&&$(id).value)||0;}
+function fmt(n){return (Math.round((+n||0)*100)/100).toLocaleString('es-AR',{minimumFractionDigits:0,maximumFractionDigits:2});}
+function margenOpts(def){var s='<option value="0">Sin margen</option>';for(var i=1;i<=20;i++)s+='<option value="'+i+'"'+(i===def?' selected':'')+'>'+i+'%</option>';return s;}
+function comOpts(def){var s='';for(var i=10;i<=20;i++)s+='<option value="'+i+'"'+(i===(def||15)?' selected':'')+'>'+i+'%</option>';return s;}
 
-function margenSel(selId, def){
-  var s='<option value="0">Sin margen</option>';
-  for(var i=1;i<=20;i++) s+='<option value="'+i+'"'+(i===def?' selected':'')+'>'+i+'%</option>';
-  $(selId).innerHTML=s;
-}
-function comSel(selId, def){
-  var s='';
-  for(var i=10;i<=20;i++) s+='<option value="'+i+'"'+(i===(def||15)?' selected':'')+'>'+i+'%</option>';
-  $(selId).innerHTML=s;
-}
-
-// ─── TIPO ─────────────────────────────────────────────
-function updateTipo(){
-  MON = $('tipoViaje').value==='nac' ? 'ARS' : 'USD';
-  $('hdrInfo').innerHTML = (MON==='USD'?'Internacional · USD':'Nacional · ARS')+'<br>nomadicaviajes.com.ar';
-  document.querySelectorAll('.mL').forEach(function(el){ el.textContent=MON; });
+// MODO
+function setModo(m){
+  modo=m;
+  $('btnSimple').classList.toggle('active',m==='simple');
+  $('btnCombo').classList.toggle('active',m==='combo');
+  if(m==='simple'){
+    $('hotelCardTitle').innerHTML='&#127970; Hoteles';
+    $('hotelCardBtns').innerHTML='<button class="btn btn-ghost btn-sm" onclick="addHotelSimple()">+ Agregar opción</button>';
+    $('hotelesWrap').innerHTML='';
+    hoteles=[]; destinos=[];
+  } else {
+    $('hotelCardTitle').innerHTML='&#127970; Destinos y hoteles <span class="combo-badge">COMBINADO</span>';
+    $('hotelCardBtns').innerHTML='<button class="btn btn-ghost btn-sm" onclick="addDestino()" id="btnAddDest">+ Agregar destino</button>';
+    $('hotelesWrap').innerHTML='';
+    hoteles=[]; destinos=[];
+    addDestino(); addDestino();
+  }
   recalc();
 }
 
-// ─── PAX & NOCHES ────────────────────────────────────
+function updateTipo(){
+  MON=$('tipoViaje').value==='nac'?'ARS':'USD';
+  $('hdrInfo').innerHTML=(MON==='USD'?'Internacional · USD':'Nacional · ARS')+'<br>nomadicaviajes.com.ar';
+  document.querySelectorAll('.mL').forEach(function(el){el.textContent=MON;});
+  recalc();
+}
+
 function updatePax(){
-  var a=parseInt($('adultos').value)||0;
-  var n=parseInt($('ninos').value)||0;
-  var i=parseInt($('infantes').value)||0;
-  $('totalPax').value = a+n+i;
+  var a=parseInt($('adultos').value)||0,n=parseInt($('ninos').value)||0,i=parseInt($('infantes').value)||0;
+  $('totalPax').value=a+n+i;
 }
 function updateNoches(){
-  var s=$('fechaSalida').value, r=$('fechaRegreso').value;
-  if(s&&r){
-    var diff=Math.round((new Date(r)-new Date(s))/(864e5));
-    $('noches').value = diff>0 ? diff : 0;
-  } else {
-    $('noches').value='';
-  }
+  var s=$('fechaSalida').value,r=$('fechaRegreso').value;
+  if(s&&r){var d=Math.round((new Date(r)-new Date(s))/(864e5));$('noches').value=d>0?d:0;}
+  else $('noches').value='';
 }
 
-// ─── IMAGE ───────────────────────────────────────────
-function loadImgFile(e){
-  var file=e.target.files[0]; if(!file) return;
-  var rd=new FileReader();
-  rd.onload=function(ev){ aereoImgData=ev.target.result; showImg(); };
-  rd.readAsDataURL(file);
-}
-function showImg(){
-  $('aereoImgPrev').src=aereoImgData; $('aereoImgPrev').style.display='block';
-  $('aereoImgClear').style.display='inline-flex'; $('aereoDropArea').style.display='none';
-}
-function clearImg(){
-  aereoImgData=null; $('aereoImgPrev').style.display='none';
-  $('aereoImgClear').style.display='none'; $('aereoDropArea').style.display='block';
-}
+// IMAGE
+function loadImgFile(e){var f=e.target.files[0];if(!f)return;var rd=new FileReader();rd.onload=function(ev){aereoImgData=ev.target.result;showImg();};rd.readAsDataURL(f);}
+function showImg(){$('aereoImgPrev').src=aereoImgData;$('aereoImgPrev').style.display='block';$('aereoImgClear').style.display='inline-flex';$('aereoDropArea').style.display='none';}
+function clearImg(){aereoImgData=null;$('aereoImgPrev').style.display='none';$('aereoImgClear').style.display='none';$('aereoDropArea').style.display='block';}
 document.addEventListener('paste',function(e){
-  if(!$('chkAereo').checked) return;
+  if(!$('chkAereo').checked)return;
   var items=[].slice.call(e.clipboardData&&e.clipboardData.items||[]);
   var img=items.find(function(i){return i.type.startsWith('image');});
-  if(!img) return;
-  var rd=new FileReader(); rd.onload=function(ev){aereoImgData=ev.target.result;showImg();};
-  rd.readAsDataURL(img.getAsFile());
+  if(!img)return;
+  var rd=new FileReader();rd.onload=function(ev){aereoImgData=ev.target.result;showImg();};rd.readAsDataURL(img.getAsFile());
 });
 
-// ─── TRASLADOS ───────────────────────────────────────
-function addTraslado(){
-  var id=++tIdx; traslados.push(id);
+// AÉREOS (múltiples)
+function addAereo(){
+  var id=++aIdx; aereos.push(id);
   var div=document.createElement('div');
-  div.className='sblock'; div.id='T'+id;
+  div.className='sblock';div.id='A'+id;
+  div.innerHTML='<div class="sblock-hdr"><span class="sblock-title">Vuelo #'+id+'</span>'
+    +'<button class="rm-btn" onclick="removeA('+id+')">&#x2715;</button></div>'
+    +'<div class="g3">'
+    +'<div class="f"><label>Aerolinea</label><input id="aAer'+id+'" type="text" placeholder="Ej: LATAM"></div>'
+    +'<div class="f"><label>Costo total (<span class="mL">'+MON+'</span>)</label><input id="aNeto'+id+'" type="number" min="0" placeholder="0" step="0.01"></div>'
+    +'<div class="f"><label>Margen</label><select id="aMrg'+id+'">'+margenOpts(10)+'</select></div>'
+    +'</div>'
+    +'<div class="f" style="margin-top:7px"><label>Detalle</label><textarea id="aDet'+id+'" rows="1" placeholder="Tramo, horarios, equipaje..."></textarea></div>'
+    +'<div id="aRes'+id+'" class="rbox" style="display:none;margin-top:7px"></div>';
+  $('aereosWrap').appendChild(div);
+}
+function removeA(id){aereos=aereos.filter(function(x){return x!==id;});$('A'+id).remove();recalc();}
+
+// TRASLADOS
+function addTraslado(){
+  var id=++tIdx;traslados.push(id);
+  var div=document.createElement('div');
+  div.className='sblock';div.id='T'+id;
   div.innerHTML='<div class="sblock-hdr"><span class="sblock-title">Traslado #'+id+'</span>'
     +'<button class="rm-btn" onclick="removeT('+id+')">&#x2715;</button></div>'
     +'<div class="g4">'
-    +'<div class="f"><label>Tipo</label><select id="tTipo'+id+'"><option>IN</option><option>OUT</option><option>IN - OUT</option></select></div>'
+    +'<div class="f"><label>Tipo</label><select id="tTipo'+id+'"><option>IN</option><option>OUT</option><option>IN - OUT</option><option>Interhoteles</option><option>Interno</option></select></div>'
     +'<div class="f"><label>Proveedor</label><input id="tProv'+id+'" type="text" placeholder="Proveedor"></div>'
     +'<div class="f"><label>Tarifa por pax (<span class="mL">'+MON+'</span>)</label><input id="tTar'+id+'" type="number" min="0" placeholder="0" step="0.01"></div>'
-    +'<div class="f"><label>Comision</label><select id="tCom'+id+'"></select></div>'
+    +'<div class="f"><label>Comision</label><select id="tCom'+id+'">'+comOpts(15)+'</select></div>'
     +'</div>'
+    +'<div class="f" style="margin-top:7px"><label>Detalle</label><input id="tDet'+id+'" type="text" placeholder="Ej: aeropuerto – hotel, vehículo privado..."></div>'
     +'<div id="tRes'+id+'" class="rbox" style="display:none;margin-top:8px"></div>';
   $('trasladosWrap').appendChild(div);
-  comSel('tCom'+id,15);
 }
-function removeT(id){ traslados=traslados.filter(function(x){return x!==id;}); $('T'+id).remove(); recalc(); }
+function removeT(id){traslados=traslados.filter(function(x){return x!==id;});$('T'+id).remove();recalc();}
 
-// ─── HOTELES ─────────────────────────────────────────
-function addHotel(){
-  var id=++hIdx; hoteles.push(id);
+// HOTELES SIMPLE
+function addHotelSimple(){
+  var id=++hIdx;hoteles.push({id:id,dest:0});
   var div=document.createElement('div');
-  div.className='sblock'; div.id='H'+id;
-  div.innerHTML='<div class="sblock-hdr"><span class="sblock-title">Hotel opcion #'+id+'</span>'
+  div.className='sblock';div.id='H'+id;
+  div.innerHTML=hotelHTML(id,'Hotel opcion #'+id);
+  $('hotelesWrap').appendChild(div);
+  comInitH(id);
+}
+
+function hotelHTML(id,title){
+  return '<div class="sblock-hdr"><span class="sblock-title">'+title+'</span>'
     +'<button class="rm-btn" onclick="removeH('+id+')">&#x2715;</button></div>'
     +'<div class="g3">'
     +'<div class="f"><label>Nombre</label><input id="hNom'+id+'" type="text" placeholder="Nombre del hotel"></div>'
-    +'<div class="f"><label>Regimen</label><select id="hReg'+id+'">'
-    +'<option>Solo alojamiento</option><option>Desayuno incluido</option>'
-    +'<option>Media pension</option><option>Pension completa</option><option>All Inclusive</option>'
-    +'</select></div>'
-    +'<div class="f"><label>Categoria habitacion</label><input id="hCat'+id+'" type="text" placeholder="Ej: Junior Suite, Vista Mar..."></div>'
-    +'<div class="f"><label>Habitaciones</label><input id="hHabs'+id+'" type="number" min="1" value="1"></div>'
+    +'<div class="f"><label>Regimen</label><select id="hReg'+id+'"><option>Solo alojamiento</option><option>Desayuno incluido</option><option>Media pension</option><option>Pension completa</option><option>All Inclusive</option></select></div>'
+    +'<div class="f"><label>Categoria habitacion</label><input id="hCat'+id+'" type="text" placeholder="Ej: Junior Suite..."></div>'
     +'<div class="f"><label>Tarifa total (<span class="mL">'+MON+'</span>)</label><input id="hTar'+id+'" type="number" min="0" placeholder="0" step="0.01"></div>'
-    +'<div class="f"><label>Comision</label><select id="hCom'+id+'"></select></div>'
-    +'<div class="f" style="grid-column:span 3"><label>Link del hotel</label><input id="hLink'+id+'" type="text" placeholder="https://..."></div>'
+    +'<div class="f"><label>Comision</label><select id="hCom'+id+'">'+comOpts(15)+'</select></div>'
+    +'<div class="f"><label>Link</label><input id="hLink'+id+'" type="text" placeholder="https://..."></div>'
     +'</div>'
     +'<div id="hRes'+id+'" class="rbox" style="display:none;margin-top:8px"></div>';
-  $('hotelesWrap').appendChild(div);
-  comSel('hCom'+id,15);
 }
-function removeH(id){ hoteles=hoteles.filter(function(x){return x!==id;}); $('H'+id).remove(); recalc(); }
+function comInitH(id){/* comOpts already in HTML */}
+function removeH(id){
+  hoteles=hoteles.filter(function(x){return x.id!==id;});
+  var el=$('H'+id);if(el)el.remove();recalc();
+}
 
-// ─── SERVICIOS ───────────────────────────────────────
-function addServicio(){
-  var id=++sIdx; servicios.push(id);
+// DESTINOS (modo combo)
+function addDestino(){
+  var maxD=3;
+  if(destinos.length>=maxD){alert('Máximo '+maxD+' destinos en modo combinado.');return;}
+  var did=++dIdx;
+  destinos.push({id:did,hoteles:[]});
+  var wrap=$('hotelesWrap');
   var div=document.createElement('div');
-  div.className='sblock'; div.id='S'+id;
+  div.className='dest-block';div.id='D'+did;
+  var maxH=destinos.length<=2?3:2;
+  div.innerHTML='<div class="dest-title">'
+    +'<span>&#127981; Destino #'+did+'</span>'
+    +'<div style="display:flex;gap:6px;align-items:center">'
+    +'<button class="btn btn-ghost btn-sm" id="btnAddH'+did+'" onclick="addHotelDest('+did+')">+ Hotel</button>'
+    +'<button class="rm-btn" onclick="removeDest('+did+')">&#x2715;</button></div></div>'
+    +'<div class="g2" style="margin-bottom:9px">'
+    +'<div class="f"><label>Nombre del destino</label><input id="dNom'+did+'" type="text" placeholder="Ej: Punta Cana"></div>'
+    +'<div class="f"><label>Noches en este destino</label><input id="dNoches'+did+'" type="number" min="0" placeholder="0"></div>'
+    +'</div>'
+    +'<div id="dHotelesWrap'+did+'"></div>';
+  wrap.appendChild(div);
+  addHotelDest(did);
+  updateDestinoLimits();
+}
+
+function removeDest(did){
+  var d=destinos.find(function(x){return x.id===did;});
+  if(d) d.hoteles.forEach(function(hid){hoteles=hoteles.filter(function(x){return x.id!==hid;});});
+  destinos=destinos.filter(function(x){return x.id!==did;});
+  $('D'+did).remove();
+  updateDestinoLimits();
+  recalc();
+}
+
+function updateDestinoLimits(){
+  var maxH=destinos.length<=2?3:2;
+  destinos.forEach(function(d){
+    var btn=$('btnAddH'+d.id);
+    if(btn) btn.style.display=d.hoteles.length>=maxH?'none':'inline-flex';
+  });
+  var btnAddDest=$('btnAddDest');
+  if(btnAddDest) btnAddDest.style.display=destinos.length>=3?'none':'inline-flex';
+}
+
+function addHotelDest(did){
+  var d=destinos.find(function(x){return x.id===did;});
+  if(!d)return;
+  var maxH=destinos.length<=2?3:2;
+  if(d.hoteles.length>=maxH){alert('Máximo '+maxH+' hoteles por destino.');return;}
+  var id=++hIdx;
+  d.hoteles.push(id);
+  hoteles.push({id:id,dest:did});
+  var num=d.hoteles.length;
+  var div=document.createElement('div');
+  div.className='sblock';div.id='H'+id;div.style.marginLeft='0';
+  div.innerHTML=hotelHTML(id,'Opcion '+num);
+  $('dHotelesWrap'+did).appendChild(div);
+  updateDestinoLimits();
+}
+
+// SERVICIOS
+function addServicio(){
+  var id=++sIdx;servicios.push(id);
+  var div=document.createElement('div');
+  div.className='sblock';div.id='S'+id;
   div.innerHTML='<div class="sblock-hdr"><span class="sblock-title">Servicio adicional #'+id+'</span>'
     +'<button class="rm-btn" onclick="removeS('+id+')">&#x2715;</button></div>'
     +'<div class="g4">'
-    +'<div class="f"><label>Tipo</label><select id="sTipo'+id+'">'
-    +'<option value="autos">Autos</option><option value="circuitos">Circuitos</option>'
-    +'<option value="visa">Visa</option><option value="excursiones">Excursiones</option>'
-    +'<option value="otros">Otros</option></select></div>'
+    +'<div class="f"><label>Tipo</label><select id="sTipo'+id+'"><option value="autos">Autos</option><option value="circuitos">Circuitos</option><option value="visa">Visa</option><option value="excursiones">Excursiones</option><option value="otros">Otros</option></select></div>'
     +'<div class="f"><label>Descripcion</label><input id="sDesc'+id+'" type="text" placeholder="Detalle"></div>'
     +'<div class="f"><label>Tarifa (<span class="mL">'+MON+'</span>)</label><input id="sTar'+id+'" type="number" min="0" placeholder="0" step="0.01"></div>'
     +'<div class="f"><label>Tipo tarifa</label><select id="sTT'+id+'" onchange="refreshSExtra('+id+')">'
     +'<option value="com">Comisionable</option><option value="neto">Neto (margen)</option></select></div>'
     +'</div>'
     +'<div id="sExtra'+id+'" style="margin-top:7px;max-width:200px">'
-    +'<div class="f"><label>Comision</label><select id="sCom'+id+'"></select></div></div>'
+    +'<div class="f"><label>Comision</label><select id="sCom'+id+'">'+comOpts(15)+'</select></div></div>'
     +'<div id="sRes'+id+'" class="rbox" style="display:none;margin-top:8px"></div>';
   $('serviciosWrap').appendChild(div);
-  comSel('sCom'+id,15);
 }
 function refreshSExtra(id){
-  var tipo=$('sTT'+id).value;
-  var lbl=tipo==='com'?'Comision':'Margen de ganancia';
-  $('sExtra'+id).innerHTML='<div class="f"><label>'+lbl+'</label><select id="sCom'+id+'"></select></div>';
-  if(tipo==='com') comSel('sCom'+id,15); else margenSel('sCom'+id,10);
+  var t=$('sTT'+id).value;
+  $('sExtra'+id).innerHTML='<div class="f"><label>'+(t==='com'?'Comision':'Margen')+'</label>'
+    +'<select id="sCom'+id+'">'+(t==='com'?comOpts(15):margenOpts(10))+'</select></div>';
   recalc();
 }
-function removeS(id){ servicios=servicios.filter(function(x){return x!==id;}); $('S'+id).remove(); recalc(); }
+function removeS(id){servicios=servicios.filter(function(x){return x!==id;});$('S'+id).remove();recalc();}
 
 // ─── RECALC ──────────────────────────────────────────
 function recalc(){
-  updatePax();
-  updateNoches();
+  updatePax();updateNoches();
   var mon=MON;
-  var a=parseInt($('adultos').value)||0;
-  var n=parseInt($('ninos').value)||0;
-  var inf=parseInt($('infantes').value)||0;
-  var paxTotal=a+n+inf;
-  var paxPag=a+n; // pagantes (sin infantes) para traslados
+  var a=parseInt($('adultos').value)||0,n=parseInt($('ninos').value)||0,inf=parseInt($('infantes').value)||0;
+  var paxT=a+n+inf,paxP=a+n;
 
-  // AÉREO
-  var aerFin=0, aerGan=0;
+  // AÉREOS
+  var aerFin=0,aerGan=0;
   if($('chkAereo').checked){
-    var aerNeto=val('aereoNeto');
-    var aerMrg=val('aereoMargen')/100;
-    aerGan=aerNeto*aerMrg; aerFin=aerNeto+aerGan;
-    $('aereoResult').style.display='block';
-    $('aereoResult').innerHTML=
-      '<div class="rrow"><span>Costo neto</span><span>'+mon+' '+fmt(aerNeto)+'</span></div>'
-      +'<div class="rrow rprofit"><span>Margen ('+Math.round(aerMrg*100)+'%)</span><span>'+mon+' '+fmt(aerGan)+'</span></div>'
-      +'<div class="rrow rtotal"><span>Precio final</span><span>'+mon+' '+fmt(aerFin)+'</span></div>';
+    aereos.forEach(function(id){
+      var neto=val('aNeto'+id),mrg=val('aMrg'+id)/100;
+      var gan=neto*mrg,fin=neto+gan;
+      aerFin+=fin;aerGan+=gan;
+      var r=$('aRes'+id);if(!r)return;
+      r.style.display='block';
+      r.innerHTML='<div class="rrow"><span>Costo neto</span><span>'+mon+' '+fmt(neto)+'</span></div>'
+        +'<div class="rrow rprofit"><span>Margen ('+Math.round(mrg*100)+'%)</span><span>'+mon+' '+fmt(gan)+'</span></div>'
+        +'<div class="rrow rtotal"><span>Precio final</span><span>'+mon+' '+fmt(fin)+'</span></div>';
+    });
   }
 
   // TRASLADOS
-  var trasFin=0, trasCom=0;
+  var trasFin=0,trasCom=0;
   traslados.forEach(function(id){
-    var tar=val('tTar'+id);
-    var com=val('tCom'+id)/100;
-    var sub=tar*paxPag;
-    var comM=sub*com;
-    trasFin+=sub; trasCom+=comM;
-    var r=$('tRes'+id); if(!r) return;
+    var tar=val('tTar'+id),com=val('tCom'+id)/100,sub=tar*paxP,comM=sub*com;
+    trasFin+=sub;trasCom+=comM;
+    var r=$('tRes'+id);if(!r)return;
     r.style.display='block';
-    r.innerHTML='<div class="rrow"><span>Pax pagantes (sin infantes)</span><span>'+paxPag+'</span></div>'
+    r.innerHTML='<div class="rrow"><span>Pax pagantes</span><span>'+paxP+'</span></div>'
       +'<div class="rrow"><span>Subtotal</span><span>'+mon+' '+fmt(sub)+'</span></div>'
       +'<div class="rrow rprofit"><span>Comision ('+Math.round(com*100)+'%)</span><span>'+mon+' '+fmt(comM)+'</span></div>';
   });
 
-  // HOTELES (solo muestra comision)
-  hoteles.forEach(function(id){
-    var tar=val('hTar'+id);
-    var com=val('hCom'+id)/100;
-    var r=$('hRes'+id); if(!r) return;
+  // HOTELES inline result
+  hoteles.forEach(function(h){
+    var id=h.id,tar=val('hTar'+id),com=val('hCom'+id)/100;
+    var r=$('hRes'+id);if(!r)return;
     r.style.display='block';
     r.innerHTML='<div class="rrow"><span>Tarifa total</span><span>'+mon+' '+fmt(tar)+'</span></div>'
       +'<div class="rrow rprofit"><span>Comision ('+Math.round(com*100)+'%)</span><span>'+mon+' '+fmt(tar*com)+'</span></div>';
   });
 
   // ASISTENCIA
-  var asistFin=0, asistCom=0;
+  var asistFin=0,asistCom=0;
   if($('chkAsist').checked){
-    var atar=val('asistTarifa');
-    var acom=val('asistEmpresa');
-    asistFin=atar; asistCom=atar*acom;
+    var atar=val('asistTarifa'),acom=val('asistEmpresa');
+    asistFin=atar;asistCom=atar*acom;
     $('asistResult').style.display='block';
     $('asistResult').innerHTML='<div class="rrow"><span>Tarifa total</span><span>'+mon+' '+fmt(atar)+'</span></div>'
       +'<div class="rrow rprofit"><span>Comision ('+Math.round(acom*100)+'%)</span><span>'+mon+' '+fmt(asistCom)+'</span></div>';
   }
 
-  // SERVICIOS ADICIONALES
-  var servFin=0, servGan=0;
+  // SERVICIOS
+  var servFin=0,servGan=0;
   servicios.forEach(function(id){
     var tipo=$('sTipo'+id)&&$('sTipo'+id).value;
     var tt=$('sTT'+id)&&$('sTT'+id).value;
-    var tar=val('sTar'+id);
-    var pct=val('sCom'+id)/100;
+    var tar=val('sTar'+id),pct=val('sCom'+id)/100;
     var porPax=['circuitos','visa','excursiones'].indexOf(tipo)>=0;
-    var base=porPax?tar*paxTotal:tar;
-    var gan=base*pct;
-    var fin=tt==='neto'?base*(1+pct):base;
-    servFin+=fin; servGan+=gan;
-    var r=$('sRes'+id); if(!r) return;
+    var base=porPax?tar*paxT:tar,gan=base*pct,fin=tt==='neto'?base*(1+pct):base;
+    servFin+=fin;servGan+=gan;
+    var r=$('sRes'+id);if(!r)return;
     r.style.display='block';
-    r.innerHTML='<div class="rrow"><span>Base'+(porPax?' x '+paxTotal+' pax':'')+'</span><span>'+mon+' '+fmt(base)+'</span></div>'
+    r.innerHTML='<div class="rrow"><span>Base'+(porPax?' x '+paxT+' pax':'')+'</span><span>'+mon+' '+fmt(base)+'</span></div>'
       +'<div class="rrow rprofit"><span>'+(tt==='com'?'Comision':'Margen')+' ('+Math.round(pct*100)+'%)</span><span>'+mon+' '+fmt(gan)+'</span></div>'
       +(tt==='neto'?'<div class="rrow rtotal"><span>Precio final</span><span>'+mon+' '+fmt(fin)+'</span></div>':'');
   });
 
-  // GASTOS DE RESERVA
-  var pctGR=val('gastosReserva')/100;
-  var baseTerr=trasFin-trasCom;
-  hoteles.forEach(function(id){
-    var tar=val('hTar'+id); var com=val('hCom'+id)/100;
-    baseTerr+=tar-tar*com;
-  });
+  // GASTOS RESERVA
+  var pctGR=val('gastosReserva')/100,baseTerr=trasFin-trasCom;
+  hoteles.forEach(function(h){var tar=val('hTar'+h.id),com=val('hCom'+h.id)/100;baseTerr+=tar-tar*com;});
   servicios.forEach(function(id){
     if($('sTT'+id)&&$('sTT'+id).value==='com'){
-      var tipo=$('sTipo'+id)&&$('sTipo'+id).value;
-      var tar=val('sTar'+id); var com=val('sCom'+id)/100;
+      var tipo=$('sTipo'+id)&&$('sTipo'+id).value,tar=val('sTar'+id),com=val('sCom'+id)/100;
       var porPax=['circuitos','visa','excursiones'].indexOf(tipo)>=0;
-      var base=porPax?tar*paxTotal:tar;
-      baseTerr+=base-base*com;
+      var base=porPax?tar*paxT:tar;baseTerr+=base-base*com;
     }
   });
   var gr=baseTerr*pctGR;
   $('gastosCalc').value=mon+' '+fmt(gr);
-
   var desc=$('chkDesc').checked?val('descMonto'):0;
-
-  window._C={aerFin,aerGan,trasFin,trasCom,asistFin,asistCom,servFin,servGan,gr,desc,
-    paxTotal,paxPag,infantes:inf,adultos:a,ninos:n,mon};
+  window._C={aerFin,aerGan,trasFin,trasCom,asistFin,asistCom,servFin,servGan,gr,desc,paxT,paxP,adultos:a,ninos:n,infantes:inf,mon};
 }
 
-function hTotal(hid){
+// BASE SIN HOTELES
+function baseTotal(){
   var C=window._C||{};
-  var tar=val('hTar'+hid);
-  var com=val('hCom'+hid)/100;
-  var hCom=tar*com;
-  var tot=(C.aerFin||0)+(C.trasFin||0)+tar+(C.asistFin||0)+(C.servFin||0)+(C.gr||0)-(C.desc||0);
-  var gan=(C.aerGan||0)+(C.trasCom||0)+hCom+(C.asistCom||0)+(C.servGan||0)-(C.gr||0);
-  var pp=C.paxTotal>0?tot/C.paxTotal:0;
+  return (C.aerFin||0)+(C.trasFin||0)+(C.asistFin||0)+(C.servFin||0)+(C.gr||0)-(C.desc||0);
+}
+function baseGan(){
+  var C=window._C||{};
+  return (C.aerGan||0)+(C.trasCom||0)+(C.asistCom||0)+(C.servGan||0)-(C.gr||0);
+}
+
+// TOTAL CON HOTEL(ES)
+function totalConHoteles(hids){
+  var C=window._C||{};
+  var hTot=0,hCom=0;
+  hids.forEach(function(hid){
+    var tar=val('hTar'+hid),com=val('hCom'+hid)/100;
+    hTot+=tar;hCom+=tar*com;
+  });
+  var tot=baseTotal()+hTot;
+  var gan=baseGan()+hCom;
+  var pp=C.paxT>0?tot/C.paxT:0;
   return {tot,gan,pp,totT:tot*1.015,ppT:pp*1.015};
+}
+
+// COMBINACIONES
+function getCombinaciones(){
+  if(modo==='simple') return null;
+  if(destinos.length===0) return [];
+  var groups=destinos.map(function(d){return d.hoteles;});
+  var result=[[]];
+  groups.forEach(function(g){
+    var next=[];
+    result.forEach(function(prev){
+      g.forEach(function(hid){next.push(prev.concat([hid]));});
+    });
+    result=next;
+  });
+  return result;
 }
 
 // ─── RESUMEN ─────────────────────────────────────────
 function buildResumen(){
   recalc();
-  var C=window._C; if(!C) return '<p style="color:#aaa;text-align:center;padding:20px">Completa los datos primero.</p>';
+  var C=window._C;if(!C)return '<p style="color:#aaa;text-align:center;padding:20px">Completa los datos primero.</p>';
   var mon=C.mon;
-  var cliente=$('cliente').value||'—';
-  var destino=$('destino').value||'—';
-  var fs=$('fechaSalida').value||'—';
-  var fr=$('fechaRegreso').value||'—';
-  var noches=$('noches').value||0;
+  var cliente=$('cliente').value||'—',destino=$('destino').value||'—';
+  var fs=$('fechaSalida').value||'—',fr=$('fechaRegreso').value||'—',noches=$('noches').value||0;
 
   var html='<div style="background:#f5f0e8;border-radius:7px;padding:10px 13px;margin-bottom:13px">'
-    +'<p style="font-weight:700;color:var(--brand);font-size:14px">'+cliente+' · '+destino+'</p>'
-    +'<p style="font-size:11px;color:#888;margin-top:2px">'+fs+' → '+fr+' · '+noches+' noches · '
-    +C.adultos+' adultos, '+C.ninos+' niños, '+C.infantes+' infantes</p></div>';
+    +'<p style="font-weight:700;color:var(--brand);font-size:14px">'+cliente+' · '+destino+(modo==='combo'?' <span class="combo-badge">COMBINADO</span>':'')+'</p>'
+    +'<p style="font-size:11px;color:#888;margin-top:2px">'+fs+' → '+fr+' · '+noches+' noches · '+C.adultos+' adultos, '+C.ninos+' niños, '+C.infantes+' infantes</p></div>';
 
-  function hotelCard(hid){
-    var nom=$('hNom'+hid)&&$('hNom'+hid).value||'Hotel #'+hid;
-    var reg=$('hReg'+hid)&&$('hReg'+hid).value||'';
-    var h=hTotal(hid);
+  function desglose(hids){
     var rows='';
     if($('chkAereo').checked){
-      var aer=$('aerolinea').value||'Vuelo';
-      rows+='<div class="srow"><span>Aereos ('+aer+')</span><span>'+mon+' '+fmt(C.aerFin)+'</span></div>';
+      aereos.forEach(function(aid){
+        var aer=$('aAer'+aid)&&$('aAer'+aid).value||'Vuelo';
+        var neto=val('aNeto'+aid),mrg=val('aMrg'+aid)/100;
+        rows+='<div class="srow"><span>Vuelo: '+aer+'</span><span>'+mon+' '+fmt(neto*(1+mrg))+'</span></div>';
+      });
     }
     traslados.forEach(function(tid){
       var tipo=$('tTipo'+tid)&&$('tTipo'+tid).value;
-      var prov=$('tProv'+tid)&&$('tProv'+tid).value||'Traslado';
-      var sub=val('tTar'+tid)*C.paxPag;
-      rows+='<div class="srow"><span>Traslado '+tipo+' · '+prov+'</span><span>'+mon+' '+fmt(sub)+'</span></div>';
+      var prov=$('tProv'+tid)&&$('tProv'+tid).value||'';
+      rows+='<div class="srow"><span>Traslado '+tipo+(prov?' · '+prov:'')+'</span><span>'+mon+' '+fmt(val('tTar'+tid)*C.paxP)+'</span></div>';
     });
-    rows+='<div class="srow"><span>'+nom+'</span><span>'+mon+' '+fmt(val('hTar'+hid))+'</span></div>';
+    hids.forEach(function(hid){
+      var nom=$('hNom'+hid)&&$('hNom'+hid).value||'Hotel';
+      rows+='<div class="srow"><span>'+nom+'</span><span>'+mon+' '+fmt(val('hTar'+hid))+'</span></div>';
+    });
     if($('chkAsist').checked){
-      var emp=$('asistEmpresa'); var en=emp.options[emp.selectedIndex].text.split('(')[0].trim();
+      var emp=$('asistEmpresa');var en=emp.options[emp.selectedIndex].text.split('(')[0].trim();
       rows+='<div class="srow"><span>'+en+'</span><span>'+mon+' '+fmt(C.asistFin)+'</span></div>';
     }
     servicios.forEach(function(sid){
       var desc=$('sDesc'+sid)&&$('sDesc'+sid).value||$('sTipo'+sid)&&$('sTipo'+sid).value;
-      var tipo=$('sTipo'+sid)&&$('sTipo'+sid).value;
-      var tt=$('sTT'+sid)&&$('sTT'+sid).value;
-      var tar=val('sTar'+sid); var pct=val('sCom'+sid)/100;
+      var tipo=$('sTipo'+sid)&&$('sTipo'+sid).value,tt=$('sTT'+sid)&&$('sTT'+sid).value;
+      var tar=val('sTar'+sid),pct=val('sCom'+sid)/100;
       var porPax=['circuitos','visa','excursiones'].indexOf(tipo)>=0;
-      var base=porPax?tar*C.paxTotal:tar;
-      var fin=tt==='neto'?base*(1+pct):base;
+      var base=porPax?tar*C.paxT:tar,fin=tt==='neto'?base*(1+pct):base;
       rows+='<div class="srow"><span>'+desc+'</span><span>'+mon+' '+fmt(fin)+'</span></div>';
     });
     rows+='<div class="srow"><span>Gastos de reserva ('+$('gastosReserva').value+'%)</span><span>'+mon+' '+fmt(C.gr)+'</span></div>';
-    if(C.desc>0){
-      var det=$('descDetalle').value||'Descuento';
-      rows+='<div class="srow sdiscount"><span>'+det+'</span><span>- '+mon+' '+fmt(C.desc)+'</span></div>';
-    }
-    return '<div class="sh-card">'
-      +'<div class="sh-hdr">'+nom+' <span>'+reg+'</span></div>'
-      +rows
-      +'<div class="srow stotal"><span>Total grupo · Efectivo ('+C.paxTotal+' pax)</span><span>'+mon+' '+fmt(h.tot)+'</span></div>'
-      +'<div class="srow stransfer"><span>Total grupo · Transferencia (+1.5%)</span><span>'+mon+' '+fmt(h.totT)+'</span></div>'
-      +'<div class="srow stotal"><span>Total por persona · Efectivo</span><span>'+mon+' '+fmt(h.pp)+'</span></div>'
-      +'<div class="srow stransfer"><span>Total por persona · Transferencia (+1.5%)</span><span>'+mon+' '+fmt(h.ppT)+'</span></div>'
-      +'<div class="srow sprofit"><span>Rentabilidad estimada</span><span>'+mon+' '+fmt(h.gan)+'</span></div>'
-      +'</div>';
+    if(C.desc>0) rows+='<div class="srow sdiscount"><span>'+($('descDetalle').value||'Descuento')+'</span><span>- '+mon+' '+fmt(C.desc)+'</span></div>';
+    return rows;
   }
 
-  if(hoteles.length===0){
-    var tot=(C.aerFin||0)+(C.trasFin||0)+(C.asistFin||0)+(C.servFin||0)+(C.gr||0)-(C.desc||0);
-    var gan=(C.aerGan||0)+(C.trasCom||0)+(C.asistCom||0)+(C.servGan||0)-(C.gr||0);
-    var pp=C.paxTotal>0?tot/C.paxTotal:0;
-    html+='<div class="sh-card"><div class="sh-hdr">Resumen general</div>'
-      +'<div class="srow stotal"><span>Total grupo · Efectivo</span><span>'+mon+' '+fmt(tot)+'</span></div>'
-      +'<div class="srow stransfer"><span>Total grupo · Transferencia (+1.5%)</span><span>'+mon+' '+fmt(tot*1.015)+'</span></div>'
-      +'<div class="srow stotal"><span>Total por persona · Efectivo</span><span>'+mon+' '+fmt(pp)+'</span></div>'
-      +'<div class="srow stransfer"><span>Total por persona · Transferencia (+1.5%)</span><span>'+mon+' '+fmt(pp*1.015)+'</span></div>'
-      +'<div class="srow sprofit"><span>Rentabilidad estimada</span><span>'+mon+' '+fmt(gan)+'</span></div></div>';
+  if(modo==='simple'){
+    if(hoteles.length===0){
+      var tot=baseTotal(),gan=baseGan(),pp=C.paxT>0?tot/C.paxT:0;
+      html+='<div class="sh-card"><div class="sh-hdr">Resumen general</div>'
+        +desglose([])
+        +'<div class="srow stotal"><span>Total grupo · Efectivo</span><span>'+mon+' '+fmt(tot)+'</span></div>'
+        +'<div class="srow stransfer"><span>Total grupo · Transferencia (+1.5%)</span><span>'+mon+' '+fmt(tot*1.015)+'</span></div>'
+        +'<div class="srow stotal"><span>Total por persona · Efectivo</span><span>'+mon+' '+fmt(pp)+'</span></div>'
+        +'<div class="srow stransfer"><span>Total por persona · Transferencia</span><span>'+mon+' '+fmt(pp*1.015)+'</span></div>'
+        +'<div class="srow sprofit"><span>Rentabilidad estimada</span><span>'+mon+' '+fmt(gan)+'</span></div></div>';
+    } else {
+      hoteles.forEach(function(h){
+        var id=h.id;
+        var nom=$('hNom'+id)&&$('hNom'+id).value||'Hotel #'+id;
+        var reg=$('hReg'+id)&&$('hReg'+id).value||'';
+        var t=totalConHoteles([id]);
+        html+='<div class="sh-card"><div class="sh-hdr">'+nom+' <span>'+reg+'</span></div>'
+          +desglose([id])
+          +'<div class="srow stotal"><span>Total grupo · Efectivo ('+C.paxT+' pax)</span><span>'+mon+' '+fmt(t.tot)+'</span></div>'
+          +'<div class="srow stransfer"><span>Total grupo · Transferencia (+1.5%)</span><span>'+mon+' '+fmt(t.totT)+'</span></div>'
+          +'<div class="srow stotal"><span>Total por persona · Efectivo</span><span>'+mon+' '+fmt(t.pp)+'</span></div>'
+          +'<div class="srow stransfer"><span>Total por persona · Transferencia</span><span>'+mon+' '+fmt(t.ppT)+'</span></div>'
+          +'<div class="srow sprofit"><span>Rentabilidad estimada</span><span>'+mon+' '+fmt(t.gan)+'</span></div></div>';
+      });
+    }
   } else {
-    hoteles.forEach(function(hid){ html+=hotelCard(hid); });
+    // MODO COMBO
+    var combos=getCombinaciones();
+    if(!combos||combos.length===0){
+      html+='<p style="color:#aaa;text-align:center;padding:16px">Agregá destinos y hoteles para ver las combinaciones.</p>';
+    } else {
+      // Desglose base (sin hoteles, una vez)
+      html+='<div class="sh-card"><div class="sh-hdr">Desglose de servicios comunes</div>'
+        +desglose([])+'</div>';
+      html+='<p style="font-size:12px;font-weight:700;color:var(--brand);margin:10px 0 8px">'+combos.length+' combinaciones posibles:</p>';
+      combos.forEach(function(hids,idx){
+        var labels=hids.map(function(hid,di){
+          var nom=$('hNom'+hid)&&$('hNom'+hid).value||'Hotel';
+          var cat=$('hCat'+hid)&&$('hCat'+hid).value||'';
+          var dNom=$('dNom'+(di+1))&&$('dNom'+(di+1)).value||'Destino '+(di+1);
+          return dNom+': '+nom+(cat?' ('+cat+')':'');
+        }).join(' + ');
+        var t=totalConHoteles(hids);
+        html+='<div class="sh-card">'
+          +'<div class="sh-hdr">Combinacion #'+(idx+1)+' <span>'+mon+' '+fmt(t.tot)+'</span></div>'
+          +'<div class="srow ssub"><span>'+labels+'</span></div>'
+          +hids.map(function(hid){
+            var nom=$('hNom'+hid)&&$('hNom'+hid).value||'Hotel';
+            var reg=$('hReg'+hid)&&$('hReg'+hid).value||'';
+            var cat=$('hCat'+hid)&&$('hCat'+hid).value||'';
+            return '<div class="srow"><span>'+nom+(cat?' · '+cat:'')+'</span><span>'+reg+' · '+mon+' '+fmt(val('hTar'+hid))+'</span></div>';
+          }).join('')
+          +'<div class="srow stotal"><span>Total grupo · Efectivo ('+C.paxT+' pax)</span><span>'+mon+' '+fmt(t.tot)+'</span></div>'
+          +'<div class="srow stransfer"><span>Total grupo · Transferencia (+1.5%)</span><span>'+mon+' '+fmt(t.totT)+'</span></div>'
+          +'<div class="srow stotal"><span>Total por persona · Efectivo</span><span>'+mon+' '+fmt(t.pp)+'</span></div>'
+          +'<div class="srow stransfer"><span>Total por persona · Transferencia</span><span>'+mon+' '+fmt(t.ppT)+'</span></div>'
+          +'<div class="srow sprofit"><span>Rentabilidad estimada</span><span>'+mon+' '+fmt(t.gan)+'</span></div>'
+          +'</div>';
+      });
+    }
   }
   return html;
 }
 
 // ─── TABS ────────────────────────────────────────────
 function showTab(t){
-  ['cotizar','resumen','historial'].forEach(function(x){
-    $('tab-'+x).style.display='none';
-  });
-  document.querySelectorAll('.tab').forEach(function(el,i){
-    el.classList.toggle('active',['cotizar','resumen','historial'][i]===t);
-  });
+  ['cotizar','resumen','historial'].forEach(function(x){$('tab-'+x).style.display='none';});
+  document.querySelectorAll('.tab').forEach(function(el,i){el.classList.toggle('active',['cotizar','resumen','historial'][i]===t);});
   $('tab-'+t).style.display='block';
   if(t==='resumen') $('resumenContent').innerHTML=buildResumen();
   if(t==='historial') renderHist();
 }
 
-// ─── GUARDAR ─────────────────────────────────────────
+// ─── GUARDAR / HISTORIAL ─────────────────────────────
 function guardar(){
   recalc();
-  var c=$('cliente').value, d=$('destino').value;
-  if(!c||!d){ alert('Completa al menos cliente y destino.'); return; }
+  var c=$('cliente').value,d=$('destino').value;
+  if(!c||!d){alert('Completa al menos cliente y destino.');return;}
   var hist=getHist();
   hist.unshift({id:Date.now(),fecha:new Date().toLocaleDateString('es-AR'),
-    cliente:c,destino:d,tipo:$('tipoViaje').value,html:buildResumen()});
-  if(hist.length>20) hist.pop();
-  saveHist(hist);
-  alert('Cotizacion guardada.');
+    cliente:c,destino:d,tipo:$('tipoViaje').value,modo:modo,html:buildResumen()});
+  if(hist.length>20)hist.pop();
+  saveHist(hist);alert('Cotizacion guardada.');
 }
-function getHist(){ try{return JSON.parse(localStorage.getItem('nmd3')||'[]');}catch(e){return[];} }
-function saveHist(h){ localStorage.setItem('nmd3',JSON.stringify(h)); }
-
+function getHist(){try{return JSON.parse(localStorage.getItem('nmd4')||'[]');}catch(e){return[];}}
+function saveHist(h){localStorage.setItem('nmd4',JSON.stringify(h));}
 function renderHist(){
   var hist=getHist();
   $('histCount').textContent=hist.length+' guardadas';
-  if(!hist.length){ $('histList').innerHTML='<div style="text-align:center;padding:30px;color:#bbb">No hay cotizaciones guardadas</div>'; return; }
+  if(!hist.length){$('histList').innerHTML='<div style="text-align:center;padding:30px;color:#bbb">No hay cotizaciones guardadas</div>';return;}
   $('histList').innerHTML=hist.map(function(h){
     return '<div class="hist-item">'
       +'<div onclick="verH('+h.id+')" style="flex:1">'
-      +'<div style="font-weight:700;font-size:13px">'+h.cliente+' · '+h.destino+'</div>'
+      +'<div style="font-weight:700;font-size:13px">'+h.cliente+' · '+h.destino+(h.modo==='combo'?' <span class="combo-badge">COMBINADO</span>':'')+'</div>'
       +'<div style="font-size:11px;color:#999">'+h.fecha+' · '+(h.tipo==='nac'?'Nacional · ARS':'Internacional · USD')+'</div>'
       +'</div>'
       +'<div style="display:flex;gap:6px">'
@@ -680,57 +765,52 @@ function renderHist(){
       +'</div></div>';
   }).join('');
 }
-function verH(id){
-  var h=getHist().find(function(x){return x.id===id;});
-  if(!h) return;
-  showTab('resumen');
-  $('resumenContent').innerHTML='<p style="font-size:11px;color:#aaa;margin-bottom:10px">Guardada el '+h.fecha+'</p>'+h.html;
-}
-function delH(id){
-  if(!confirm('Eliminar esta cotizacion?')) return;
-  saveHist(getHist().filter(function(x){return x.id!==id;}));
-  renderHist();
-}
-function limpiar(){ if(confirm('Limpiar todo?')) location.reload(); }
+function verH(id){var h=getHist().find(function(x){return x.id===id;});if(!h)return;showTab('resumen');$('resumenContent').innerHTML='<p style="font-size:11px;color:#aaa;margin-bottom:10px">Guardada el '+h.fecha+'</p>'+h.html;}
+function delH(id){if(!confirm('Eliminar esta cotizacion?'))return;saveHist(getHist().filter(function(x){return x.id!==id;}));renderHist();}
+function limpiar(){if(confirm('Limpiar todo?'))location.reload();}
 
 // ─── WHATSAPP ────────────────────────────────────────
-function fmtFecha(v){
-  if(!v) return '—';
-  var p=v.split('-'); var meses=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
-  return parseInt(p[2])+' de '+meses[parseInt(p[1])-1];
-}
+function fmtFecha(v){if(!v)return'—';var p=v.split('-');var m=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];return parseInt(p[2])+' de '+m[parseInt(p[1])-1];}
+
 function generarWA(){
   recalc();
-  var C=window._C; if(!C){alert('Completa los datos primero.');return;}
-  var mon=C.mon;
-  var dest=($('destino').value||'DESTINO').toUpperCase();
-  var fs=$('fechaSalida').value, fr=$('fechaRegreso').value;
-  var noches=$('noches').value||0;
+  var C=window._C;if(!C){alert('Completa los datos primero.');return;}
+  var mon=C.mon,dest=($('destino').value||'DESTINO').toUpperCase();
+  var fs=$('fechaSalida').value,fr=$('fechaRegreso').value,noches=$('noches').value||0;
   var parts=[];
-  if(C.adultos) parts.push(C.adultos+' adulto'+(C.adultos!==1?'s':''));
-  if(C.ninos) parts.push(C.ninos+' niño'+(C.ninos!==1?'s':''));
-  if(C.infantes) parts.push(C.infantes+' infante'+(C.infantes!==1?'s':''));
+  if(C.adultos)parts.push(C.adultos+' adulto'+(C.adultos!==1?'s':''));
+  if(C.ninos)parts.push(C.ninos+' niño'+(C.ninos!==1?'s':''));
+  if(C.infantes)parts.push(C.infantes+' infante'+(C.infantes!==1?'s':''));
 
-  var txt='*'+dest+'*\n';
-  txt+='📆 '+fmtFecha(fs)+' al '+fmtFecha(fr)+'\n';
-  txt+='🌙 '+noches+' noches\n';
-  txt+='👨‍👩‍👦‍👦 '+parts.join(' + ')+'\n\n\n';
+  var txt='*'+dest+'*\n📆 '+fmtFecha(fs)+' al '+fmtFecha(fr)+'\n🌙 '+noches+' noches\n👨‍👩‍👦‍👦 '+parts.join(' + ')+'\n\n\n';
 
   if($('chkAereo').checked){
-    var aer=$('aerolinea').value||'';
-    var det=$('aereoDetalle').value;
-    txt+='✈ Aéreos con '+aer+(det?' _('+det+')_':'')+'\n';
+    aereos.forEach(function(aid){
+      var aer=$('aAer'+aid)&&$('aAer'+aid).value||'';
+      var det=$('aDet'+aid)&&$('aDet'+aid).value;
+      txt+='✈ Vuelo con '+aer+(det?' _('+det+')_':'')+'\n';
+    });
   }
   traslados.forEach(function(tid){
     var tipo=$('tTipo'+tid)&&$('tTipo'+tid).value||'';
-    txt+='🚍 Traslados en destino '+(tipo==='IN - OUT'?'de entrada y salida':tipo)+'.\n';
+    var prov=$('tProv'+tid)&&$('tProv'+tid).value||'';
+    var det=$('tDet'+tid)&&$('tDet'+tid).value||'';
+    txt+='🚍 Traslado '+tipo+(prov?' · '+prov:'')+(det?' – '+det:'')+'\n';
   });
-  if(noches && hoteles.length>0){
-    var reg=$('hReg'+hoteles[0])&&$('hReg'+hoteles[0]).value||'';
+
+  if(modo==='combo'){
+    destinos.forEach(function(d){
+      var dnom=$('dNom'+d.id)&&$('dNom'+d.id).value||'Destino';
+      var dnoch=$('dNoches'+d.id)&&$('dNoches'+d.id).value||0;
+      txt+='🌍 '+dnoch+' noches en '+dnom+'\n';
+    });
+  } else if(noches && hoteles.length>0){
+    var reg=$('hReg'+hoteles[0].id)&&$('hReg'+hoteles[0].id).value||'';
     txt+='🛌 '+noches+' noches de alojamiento'+(reg?' con '+reg:'')+'.\n';
   }
+
   if($('chkAsist').checked){
-    var emp=$('asistEmpresa'); var en=emp.options[emp.selectedIndex].text.split('(')[0].trim();
+    var emp=$('asistEmpresa');var en=emp.options[emp.selectedIndex].text.split('(')[0].trim();
     txt+='🆘 Asistencia al viajero '+en+'.\n';
   }
   servicios.forEach(function(sid){
@@ -739,172 +819,154 @@ function generarWA(){
   });
   txt+='🆘 Soporte y guardia 24hs ante cambios o reprogramaciones\n\n';
 
-  hoteles.forEach(function(hid){
-    var nom=($('hNom'+hid)&&$('hNom'+hid).value||'Hotel').toUpperCase();
-    var cat=$('hCat'+hid)&&$('hCat'+hid).value||'';
-    var h=hTotal(hid);
-    txt+='🛎 '+nom+'\n';
-    if(cat) txt+='Habitación '+cat+'\n';
-    txt+='Tarifa final por grupo familiar:\n';
-    txt+='💵 Efectivo: '+mon+' '+fmt(h.tot)+'\n';
-    txt+='🏦 Transferencia: '+mon+' '+fmt(h.totT)+'\n\n';
-  });
+  if(modo==='simple'){
+    hoteles.forEach(function(h){
+      var id=h.id;
+      var nom=($('hNom'+id)&&$('hNom'+id).value||'Hotel').toUpperCase();
+      var cat=$('hCat'+id)&&$('hCat'+id).value||'';
+      var t=totalConHoteles([id]);
+      txt+='🛎 '+nom+'\n'+(cat?'Habitación '+cat+'\n':'')
+        +'Tarifa final por grupo familiar:\n'
+        +'💵 Efectivo: '+mon+' '+fmt(t.tot)+'\n'
+        +'🏦 Transferencia: '+mon+' '+fmt(t.totT)+'\n\n';
+    });
+  } else {
+    var combos=getCombinaciones();
+    if(combos&&combos.length>0){
+      combos.forEach(function(hids,idx){
+        var t=totalConHoteles(hids);
+        txt+='*Combinación #'+(idx+1)+'*\n';
+        hids.forEach(function(hid,di){
+          var dnom=$('dNom'+destinos[di].id)&&$('dNom'+destinos[di].id).value||'Destino';
+          var nom=($('hNom'+hid)&&$('hNom'+hid).value||'Hotel').toUpperCase();
+          var cat=$('hCat'+hid)&&$('hCat'+hid).value||'';
+          txt+='🛎 '+dnom+': '+nom+(cat?' · '+cat:'')+'\n';
+        });
+        txt+='💵 Efectivo: '+mon+' '+fmt(t.tot)+'\n'
+          +'🏦 Transferencia: '+mon+' '+fmt(t.totT)+'\n\n';
+      });
+    }
+  }
 
-  var totalRef=hoteles.length>0?hTotal(hoteles[0]).tot:((C.aerFin||0)+(C.trasFin||0)+(C.asistFin||0)+(C.servFin||0)+(C.gr||0)-(C.desc||0));
+  var totalRef=hoteles.length>0?totalConHoteles([hoteles[0].id]).tot:baseTotal();
   txt+='\n⭐Puntos Nomadic Club: Hasta '+Math.floor(totalRef)+' puntos ('+mon+') de crédito.\n\n';
   txt+='----------\nSumá puntos y canjealos por futuros viajes.\n*¿Qué es Nomadic Club?*\nhttps://www.nomadicaviajes.com.ar/nomadic-club\n----------\n\n';
-
   txt+='Servicios opcionales:\n';
-  if(!$('chkAsist').checked) txt+='💊 Asistencia al viajero.\n*Hasta 6 cuotas sin interés: Coris, Assist Card o Universal Assistance.\n';
+  if(!$('chkAsist').checked)txt+='💊 Asistencia al viajero.\n*Hasta 6 cuotas sin interés: Coris, Assist Card o Universal Assistance.\n';
   txt+='🤳🏼 Excursiones\n🚘 Traslados privados\n🏖️ Upgrade de habitación\n\n';
-
   txt+='💵 FORMAS DE PAGO\n';
-  if(C.aerFin>0) txt+='-Aéreos al 100% ('+mon+' '+fmt(C.aerFin)+').\n';
-  txt+='-Saldo: hasta un mes antes del viaje.\n\n';
-  txt+='Se tiene hasta 30 días antes de viajar para terminar de saldar el 100% del total de la reserva. Se pueden ir haciendo entregas parciales del monto que decida el pasajero.\n\n';
-
-  txt+='🛑INFORMACIÓN ADICIONAL\n';
-  txt+='*Tarifas para abonar con '+mon+' billete, depósito o transferencia.\n';
-  txt+='*Tarifas sujetas a confirmación de disponibilidad al momento de reservar.\n';
-  txt+='*Tarifas no reembolsables en caso de cancelación\n';
-  if($('chkAereo').checked) txt+='*Los vuelos incluyen equipaje tipo carry on en cabina, no en bodega. No incluye selección anticipada de asientos.\n';
+  if(C.aerFin>0)txt+='-Aéreos al 100% ('+mon+' '+fmt(C.aerFin)+').\n';
+  txt+='-Saldo: hasta un mes antes del viaje.\n\nSe tiene hasta 30 días antes de viajar para terminar de saldar el 100% del total de la reserva. Se pueden ir haciendo entregas parciales del monto que decida el pasajero.\n\n';
+  txt+='🛑INFORMACIÓN ADICIONAL\n*Tarifas para abonar con '+mon+' billete, depósito o transferencia.\n*Tarifas sujetas a confirmación de disponibilidad al momento de reservar.\n*Tarifas no reembolsables en caso de cancelación\n';
+  if($('chkAereo').checked)txt+='*Los vuelos incluyen equipaje tipo carry on en cabina, no en bodega. No incluye selección anticipada de asientos.\n';
   txt+='\n-----\nInstagram: https://www.instagram.com/nomadicaviajes/\nWeb: https://nomadicaviajes.com.ar/';
 
   $('waText').value=txt;
   $('waModal').classList.add('open');
 }
-function closeWA(){ $('waModal').classList.remove('open'); }
-function copyWA(){
-  $('waText').select();
-  document.execCommand('copy');
-  $('copyBtn').textContent='Copiado!';
-  setTimeout(function(){ $('copyBtn').textContent='Copiar texto'; },2000);
-}
+function closeWA(){$('waModal').classList.remove('open');}
+function copyWA(){$('waText').select();document.execCommand('copy');$('copyBtn').textContent='Copiado!';setTimeout(function(){$('copyBtn').textContent='Copiar texto';},2000);}
 
 // ─── PDF ─────────────────────────────────────────────
 function generarPDF(){
   recalc();
-  var C=window._C; if(!C){alert('Completa los datos primero.');return;}
-  var mon=C.mon;
-  var cliente=$('cliente').value||'—';
-  var destino=$('destino').value||'—';
-  var vendedor=$('vendedor').value||'';
-  var fs=$('fechaSalida').value||'—';
-  var fr=$('fechaRegreso').value||'—';
-  var noches=$('noches').value||0;
+  var C=window._C;if(!C){alert('Completa los datos primero.');return;}
+  var mon=C.mon,cliente=$('cliente').value||'—',destino=$('destino').value||'—';
+  var vendedor=$('vendedor').value||'',fs=$('fechaSalida').value||'—',fr=$('fechaRegreso').value||'—',noches=$('noches').value||0;
   var parts=[];
-  if(C.adultos) parts.push(C.adultos+' adulto'+(C.adultos!==1?'s':''));
-  if(C.ninos) parts.push(C.ninos+' niño'+(C.ninos!==1?'s':''));
-  if(C.infantes) parts.push(C.infantes+' infante'+(C.infantes!==1?'s':''));
-  var paxStr=parts.join(' + ');
+  if(C.adultos)parts.push(C.adultos+' adulto'+(C.adultos!==1?'s':''));
+  if(C.ninos)parts.push(C.ninos+' niño'+(C.ninos!==1?'s':''));
+  if(C.infantes)parts.push(C.infantes+' infante'+(C.infantes!==1?'s':''));
 
   var svcList='';
   if($('chkAereo').checked){
-    var aer=$('aerolinea').value||''; var det=$('aereoDetalle').value;
-    svcList+='<li><strong>Vuelos</strong> con '+aer+(det?'<br><em style="font-size:11px;color:#666">'+det+'</em>':'')+'</li>';
+    aereos.forEach(function(aid){
+      var aer=$('aAer'+aid)&&$('aAer'+aid).value||'';
+      var det=$('aDet'+aid)&&$('aDet'+aid).value;
+      svcList+='<li><strong>Vuelo</strong> con '+aer+(det?'<br><em style="font-size:11px;color:#666">'+det+'</em>':'')+'</li>';
+    });
   }
   traslados.forEach(function(tid){
-    var tipo=$('tTipo'+tid)&&$('tTipo'+tid).value;
-    var prov=$('tProv'+tid)&&$('tProv'+tid).value||'';
-    svcList+='<li>Traslado <strong>'+tipo+'</strong>'+(prov?' · '+prov:'')+'</li>';
+    var tipo=$('tTipo'+tid)&&$('tTipo'+tid).value,prov=$('tProv'+tid)&&$('tProv'+tid).value||'';
+    var det=$('tDet'+tid)&&$('tDet'+tid).value||'';
+    svcList+='<li>Traslado <strong>'+tipo+'</strong>'+(prov?' · '+prov:'')+(det?'<br><em style="font-size:11px;color:#666">'+det+'</em>':'')+'</li>';
   });
-  if(noches) svcList+='<li><strong>'+noches+' noches</strong> de alojamiento con el régimen indicado</li>';
-  if($('chkAsist').checked){
-    var emp=$('asistEmpresa'); var en=emp.options[emp.selectedIndex].text.split('(')[0].trim();
-    var cob=$('asistCob').value;
-    svcList+='<li>Asistencia al viajero <strong>'+en+'</strong>'+(cob?' · '+cob:'')+'</li>';
-  }
-  servicios.forEach(function(sid){
-    var desc=$('sDesc'+sid)&&$('sDesc'+sid).value||$('sTipo'+sid)&&$('sTipo'+sid).value;
-    svcList+='<li>'+desc+'</li>';
-  });
+  if(noches)svcList+='<li><strong>'+noches+' noches</strong> de alojamiento</li>';
+  if($('chkAsist').checked){var emp=$('asistEmpresa');svcList+='<li>Asistencia al viajero <strong>'+emp.options[emp.selectedIndex].text.split('(')[0].trim()+'</strong></li>';}
+  servicios.forEach(function(sid){svcList+='<li>'+($('sDesc'+sid)&&$('sDesc'+sid).value||$('sTipo'+sid)&&$('sTipo'+sid).value)+'</li>';});
   svcList+='<li>Soporte y guardia <strong>24hs</strong> ante cambios o reprogramaciones</li>';
 
-  var hotelRows='';
-  hoteles.forEach(function(hid){
-    var nom=$('hNom'+hid)&&$('hNom'+hid).value||'Hotel';
-    var reg=$('hReg'+hid)&&$('hReg'+hid).value||'';
-    var cat=$('hCat'+hid)&&$('hCat'+hid).value||'';
-    var link=$('hLink'+hid)&&$('hLink'+hid).value||'';
-    var h=hTotal(hid);
-    hotelRows+='<tr><td>'+nom+(cat?'<br><em style="font-size:11px;color:#666">'+cat+'</em>':'')+'</td>'
-      +'<td>'+reg+'</td>'
-      +'<td style="text-align:right">'+mon+' '+fmt(h.tot)+'</td>'
-      +'<td style="text-align:right">'+mon+' '+fmt(h.totT)+'</td>'
-      +'<td style="text-align:center">'+(link?'<a href="'+link+'" style="color:#1b3a5c;font-size:11px">Ver hotel</a>':'-')+'</td></tr>';
-  });
+  var hotelSection='';
+  if(modo==='simple'){
+    var rows='';
+    hoteles.forEach(function(h){
+      var id=h.id,nom=$('hNom'+id)&&$('hNom'+id).value||'Hotel',reg=$('hReg'+id)&&$('hReg'+id).value||'';
+      var cat=$('hCat'+id)&&$('hCat'+id).value||'',link=$('hLink'+id)&&$('hLink'+id).value||'';
+      var t=totalConHoteles([id]);
+      rows+='<tr><td>'+nom+(cat?'<br><em style="font-size:11px;color:#666">'+cat+'</em>':'')+'</td><td>'+reg+'</td><td style="text-align:right">'+mon+' '+fmt(t.tot)+'</td><td style="text-align:right">'+mon+' '+fmt(t.totT)+'</td><td style="text-align:center">'+(link?'<a href="'+link+'" style="color:#1b3a5c">Ver</a>':'-')+'</td></tr>';
+    });
+    if(rows)hotelSection='<h3>Opciones de alojamiento</h3><table><thead><tr><th>Hotel</th><th>Regimen</th><th>Efectivo</th><th>Transferencia</th><th>Link</th></tr></thead><tbody>'+rows+'</tbody></table>';
+  } else {
+    var combos=getCombinaciones();
+    if(combos&&combos.length>0){
+      var rows='';
+      combos.forEach(function(hids,idx){
+        var t=totalConHoteles(hids);
+        var label=hids.map(function(hid,di){
+          var dnom=$('dNom'+destinos[di].id)&&$('dNom'+destinos[di].id).value||'Destino';
+          var nom=$('hNom'+hid)&&$('hNom'+hid).value||'Hotel';
+          var cat=$('hCat'+hid)&&$('hCat'+hid).value||'';
+          return dnom+': '+nom+(cat?' ('+cat+')':'');
+        }).join('<br>');
+        rows+='<tr><td>Comb. #'+(idx+1)+'<br><em style="font-size:11px;color:#666">'+label+'</em></td><td style="text-align:right">'+mon+' '+fmt(t.tot)+'</td><td style="text-align:right">'+mon+' '+fmt(t.totT)+'</td></tr>';
+      });
+      hotelSection='<h3>Combinaciones de alojamiento</h3><table><thead><tr><th>Combinacion</th><th>Efectivo</th><th>Transferencia</th></tr></thead><tbody>'+rows+'</tbody></table>';
+    }
+  }
 
   var aerImg=aereoImgData?'<div style="margin:12px 0"><img src="'+aereoImgData+'" style="max-width:100%;border-radius:6px;border:1px solid #ddd"></div>':'';
   var descHTML=C.desc>0?'<p style="color:#c00;margin:8px 0"><strong>Descuento: '+($('descDetalle').value||'Descuento')+'</strong> – '+mon+' '+fmt(C.desc)+'</p>':'';
-  var pagoHTML=C.aerFin>0
-    ?'<ul><li><strong>Vuelo:</strong> pago total para garantizar la reserva ('+mon+' '+fmt(C.aerFin)+')</li><li><strong>Saldo:</strong> hasta 30 días antes de la salida</li><li>Posibilidad de pagos parciales</li></ul>'
-    :'<ul><li><strong>Saldo:</strong> hasta 30 días antes de la salida</li><li>Posibilidad de pagos parciales</li></ul>';
+  var pagoHTML=C.aerFin>0?'<ul><li><strong>Vuelo:</strong> pago total para garantizar la reserva ('+mon+' '+fmt(C.aerFin)+')</li><li><strong>Saldo:</strong> hasta 30 días antes de la salida</li><li>Posibilidad de pagos parciales</li></ul>':'<ul><li><strong>Saldo:</strong> hasta 30 días antes de la salida</li><li>Posibilidad de pagos parciales</li></ul>';
 
   var win=window.open('','_blank');
   if(!win){alert('Permite ventanas emergentes para generar el PDF.');return;}
-  win.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8">'
-    +'<title>Cotizacion Nomadica - '+cliente+' - '+destino+'</title>'
-    +'<style>*{box-sizing:border-box;margin:0;padding:0}'
-    +'body{font-family:Arial,sans-serif;color:#333;padding:28px;max-width:800px;margin:0 auto}'
+  win.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Cotizacion - '+cliente+'</title>'
+    +'<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:Arial,sans-serif;color:#333;padding:28px;max-width:800px;margin:0 auto}'
     +'h3{color:#1b3a5c;border-bottom:2px solid #c8881a;padding-bottom:4px;margin:18px 0 9px;font-size:14px}'
-    +'table{width:100%;border-collapse:collapse;font-size:12px}'
-    +'thead tr{background:#1b3a5c;color:#fff}'
-    +'th{padding:7px 9px;text-align:left}'
-    +'tbody tr:nth-child(even){background:#f8f5f0}'
-    +'td{padding:6px 9px;border-bottom:1px solid #eee}'
-    +'ul{padding-left:18px;line-height:2.1;font-size:13px}'
-    +'@media print{body{padding:10px}}'
-    +'</style></head><body>'
-    +'<div style="background:#1b3a5c;color:#fff;padding:16px 22px;border-radius:8px;margin-bottom:18px;display:flex;justify-content:space-between;align-items:center">'
-    +'<img src="https://static.wixstatic.com/media/5628a8_ac0bbf27db104ec1aac1230b28852e1b~mv2.png" style="height:42px;object-fit:contain" onerror="this.outerHTML=\'<div style=\\\'font-size:20px;font-weight:900;letter-spacing:3px\\\'>NOMÁDICA<div style=\\\'font-size:9px;color:#c8881a;letter-spacing:4px\\\'>VIAJES</div></div>\'">'
+    +'table{width:100%;border-collapse:collapse;font-size:12px}thead tr{background:#1b3a5c;color:#fff}th{padding:7px 9px;text-align:left}'
+    +'tbody tr:nth-child(even){background:#f8f5f0}td{padding:6px 9px;border-bottom:1px solid #eee}'
+    +'ul{padding-left:18px;line-height:2.1;font-size:13px}@media print{body{padding:10px}}</style></head><body>'
+    +'<div style="background:#374d57;color:#fff;padding:16px 22px;border-radius:8px;margin-bottom:18px;display:flex;justify-content:space-between;align-items:center">'
+    +'<img src="https://raw.githubusercontent.com/Nomadicaviajes/cotizador/main/5.%20fondo%20para%20voucher.png" style="height:42px;object-fit:contain" onerror="this.outerHTML=\'<div style=\\\'font-size:20px;font-weight:900;letter-spacing:3px\\\'>NOMÁDICA</div>\'">'
     +'<div style="text-align:right;font-size:11px;opacity:.8">nomadicaviajes.com.ar<br>@nomadicaviajes'+(vendedor?'<br>Vendedor: '+vendedor:'')+'</div></div>'
-    +'<div style="background:#f5f0e8;border-left:4px solid #1b3a5c;padding:11px 16px;border-radius:4px;margin-bottom:16px">'
-    +'<div style="font-size:17px;font-weight:700;color:#1b3a5c;margin-bottom:3px">Cotizacion – '+destino+'</div>'
+    +'<div style="background:#f5f0e8;border-left:4px solid #374d57;padding:11px 16px;border-radius:4px;margin-bottom:16px">'
+    +'<div style="font-size:17px;font-weight:700;color:#1b3a5c;margin-bottom:3px">Cotizacion – '+destino+(modo==='combo'?' (Viaje combinado)':'')+'</div>'
     +'<div style="font-size:12px;color:#555">Fechas: <strong>'+fs+' al '+fr+'</strong> · <strong>'+noches+' noches</strong></div>'
-    +'<div style="font-size:12px;color:#555">Pasajeros: <strong>'+paxStr+'</strong></div></div>'
+    +'<div style="font-size:12px;color:#555">Pasajeros: <strong>'+parts.join(' + ')+'</strong></div></div>'
     +'<h3>Servicios incluidos</h3><ul>'+svcList+'</ul>'+aerImg
-    +(hoteles.length>0?'<h3>Opciones de alojamiento</h3>'
-    +'<table><thead><tr><th>Hotel</th><th>Regimen</th><th>Efectivo ('+mon+')</th><th>Transferencia ('+mon+')</th><th>Link</th></tr></thead>'
-    +'<tbody>'+hotelRows+'</tbody></table>'
-    +'<p style="font-size:10px;color:#999;margin-top:5px">Tarifas para el grupo familiar completo. Transferencia: precio efectivo + 1.5%.</p>':'')+descHTML
+    +hotelSection+descHTML
     +'<h3>Formas de pago</h3>'+pagoHTML
-    +'<h3>Servicios opcionales</h3><ul>'
-    +'<li>Excursiones y actividades locales</li>'
-    +'<li>Traslados privados adicionales</li>'
-    +'<li>Upgrade de habitacion</li>'
-    +'<li>Asistencia al viajero con cobertura medica internacional</li></ul>'
-    +'<div style="background:#eaf2fb;border-radius:7px;padding:12px 16px;margin:18px 0">'
-    +'<div style="font-weight:700;color:#1b3a5c;margin-bottom:3px">Suma puntos en Nomadic Club</div>'
-    +'<p style="font-size:12px">Cada paquete suma puntos que podes canjear por descuentos, regalos y experiencias exclusivas.</p>'
-    +'<p style="font-size:12px"><strong>1 punto = 1 '+mon+'</strong> en compras dentro de Nomadica.</p>'
+    +'<h3>Servicios opcionales</h3><ul><li>Excursiones y actividades locales</li><li>Traslados privados adicionales</li><li>Upgrade de habitacion</li><li>Asistencia al viajero con cobertura medica internacional</li></ul>'
+    +'<div style="background:#eaf2fb;border-radius:7px;padding:12px 16px;margin:18px 0"><div style="font-weight:700;color:#1b3a5c;margin-bottom:3px">Suma puntos en Nomadic Club</div>'
+    +'<p style="font-size:12px">1 punto = 1 '+mon+' en compras dentro de Nomadica.</p>'
     +'<a href="https://nomadicaviajes.com.ar/espanol/landing/8/Nomadic-Club/" style="font-size:12px;color:#1b3a5c">nomadicaviajes.com.ar/nomadic-club</a></div>'
-    +'<div style="background:#fff8ec;border:1px solid #f0d080;border-radius:7px;padding:12px 16px">'
-    +'<div style="font-weight:700;color:#a05c10;margin-bottom:5px">Informacion adicional</div><ul style="color:#555">'
-    +'<li>Tarifas para abonar con '+mon+' billete, deposito o transferencia.</li>'
+    +'<div style="background:#fff8ec;border:1px solid #f0d080;border-radius:7px;padding:12px 16px"><div style="font-weight:700;color:#a05c10;margin-bottom:5px">Informacion adicional</div>'
+    +'<ul style="color:#555"><li>Tarifas para abonar con '+mon+' billete, deposito o transferencia.</li>'
     +'<li>Tarifas sujetas a confirmacion de disponibilidad al momento de reservar.</li>'
     +'<li>Tarifas no reembolsables en caso de cancelacion.</li>'
-    +($('chkAereo').checked?'<li>Los vuelos incluyen equipaje tipo carry on en cabina, no en bodega. No incluye seleccion anticipada de asientos.</li>':'')
+    +($('chkAereo').checked?'<li>Los vuelos incluyen equipaje tipo carry on en cabina. No incluye seleccion anticipada de asientos.</li>':'')
     +'</ul></div>'
-    +'<div style="text-align:center;margin-top:20px;font-size:10px;color:#aaa;border-top:1px solid #eee;padding-top:10px">'
-    +'Instagram: @nomadicaviajes · Web: nomadicaviajes.com.ar</div>'
-    +'<script>window.onload=function(){window.print();}<\/script>'
-    +'</body></html>');
+    +'<div style="text-align:center;margin-top:20px;font-size:10px;color:#aaa;border-top:1px solid #eee;padding-top:10px">Instagram: @nomadicaviajes · Web: nomadicaviajes.com.ar</div>'
+    +'<script>window.onload=function(){window.print();}<\/script></body></html>');
   win.document.close();
 }
 
 // ─── INIT ────────────────────────────────────────────
-margenSel('aereoMargen',10);
-$('chkAereo').onchange=function(){ $('aereoFields').style.display=this.checked?'block':'none'; recalc(); };
-$('chkAsist').onchange=function(){ $('asistFields').style.display=this.checked?'block':'none'; recalc(); };
-$('chkDesc').onchange=function(){ $('descFields').style.display=this.checked?'block':'none'; recalc(); };
-document.addEventListener('input', function(e){
-  if(e.target.type==='file') return;
-  recalc();
-});
-document.addEventListener('change', function(e){
-  if(e.target.type==='file') return;
-  recalc();
-});
+$('chkAereo').onchange=function(){$('aereoFields').style.display=this.checked?'block':'none';if(this.checked&&aereos.length===0)addAereo();recalc();};
+$('chkAsist').onchange=function(){$('asistFields').style.display=this.checked?'block':'none';recalc();};
+$('chkDesc').onchange=function(){$('descFields').style.display=this.checked?'block':'none';recalc();};
+document.addEventListener('input',function(e){if(e.target.type==='file')return;recalc();});
+document.addEventListener('change',function(e){if(e.target.type==='file')return;recalc();});
 recalc();
 </script>
 </body>
