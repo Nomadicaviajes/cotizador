@@ -848,9 +848,7 @@ function generarWA(){
     }
   }
 
-  var totalRef=hoteles.length>0?totalConHoteles([hoteles[0].id]).tot:baseTotal();
-  txt+='\n⭐Puntos Nomadic Club: Hasta '+Math.floor(totalRef)+' puntos ('+mon+') de crédito.\n\n';
-  txt+='----------\nSumá puntos y canjealos por futuros viajes.\n*¿Qué es Nomadic Club?*\nhttps://www.nomadicaviajes.com.ar/nomadic-club\n----------\n\n';
+  txt+='\n----------\nSumá puntos y canjealos por futuros viajes.\n*¿Qué es Nomadic Club?*\nhttps://www.nomadicaviajes.com.ar/nomadic-club\n----------\n\n';
   txt+='Servicios opcionales:\n';
   if(!$('chkAsist').checked)txt+='💊 Asistencia al viajero.\n*Hasta 6 cuotas sin interés: Coris, Assist Card o Universal Assistance.\n';
   txt+='🤳🏼 Excursiones\n🚘 Traslados privados\n🏖️ Upgrade de habitación\n\n';
