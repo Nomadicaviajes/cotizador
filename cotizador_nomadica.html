@@ -79,7 +79,7 @@ input[readonly]{background:#f0ebe2;color:#555}
       <img src="https://raw.githubusercontent.com/Nomadicaviajes/cotizador/main/5.%20fondo%20para%20voucher.png"
            alt="Nomádica Viajes" style="height:52px;object-fit:contain"
            onerror="this.outerHTML='<div style=\'color:#fff;font-size:22px;font-weight:900;letter-spacing:3px\'>NOMÁDICA<div style=\'font-size:9px;color:#c8881a;letter-spacing:4px;margin-top:2px\'>VIAJES</div>
-</div></div>'">
+</div>'">
     </div>
     <p style="font-size:13px;color:#666;margin-bottom:18px;font-weight:600">Ingresá la contraseña para acceder al cotizador</p>
     <input id="loginInput" type="password" placeholder="Contraseña" style="width:100%;padding:9px 12px;border:1.5px solid #d4cfc6;border-radius:7px;font-size:14px;margin-bottom:10px;text-align:center"
@@ -279,7 +279,22 @@ input[readonly]{background:#f0ebe2;color:#555}
 
 </div>
 
-<!-- WHATSAPP MODAL -->
+<!-- LOGIN OVERLAY -->
+<div id="loginOverlay" style="position:fixed;inset:0;background:#f0ebe2;z-index:99999;display:flex;align-items:center;justify-content:center">
+  <div style="background:#fff;border-radius:14px;border:1px solid #d4cfc6;padding:36px 32px;width:100%;max-width:360px;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,.08)">
+    <div style="background:#374d57;border-radius:10px;padding:18px;margin-bottom:24px">
+      <img src="https://raw.githubusercontent.com/Nomadicaviajes/cotizador/main/5.%20fondo%20para%20voucher.png"
+           alt="Nomádica Viajes" style="height:52px;object-fit:contain"
+           onerror="this.outerHTML='<div style=\'color:#fff;font-size:22px;font-weight:900;letter-spacing:3px\'>NOMÁDICA<div style=\'font-size:9px;color:#c8881a;letter-spacing:4px;margin-top:2px\'>VIAJES</div></div>'">
+    </div>
+    <p style="font-size:13px;color:#666;margin-bottom:18px;font-weight:600">Ingresá la contraseña para acceder al cotizador</p>
+    <input id="loginInput" type="password" placeholder="Contraseña"
+      style="width:100%;padding:9px 12px;border:1.5px solid #d4cfc6;border-radius:7px;font-size:14px;margin-bottom:10px;text-align:center"
+      onkeydown="if(event.key==='Enter')checkLogin()">
+    <div id="loginError" style="color:#c33;font-size:12px;margin-bottom:8px;display:none">Contraseña incorrecta</div>
+    <button onclick="checkLogin()" style="width:100%;padding:9px;background:#1b3a5c;color:#fff;border:none;border-radius:7px;font-size:14px;font-weight:700;cursor:pointer">Ingresar</button>
+  </div>
+</div>
 <div id="waModal">
   <div class="wa-box">
     <div style="display:flex;align-items:center;justify-content:space-between">
@@ -299,9 +314,7 @@ var PASS='nomadica2025';
 function checkLogin(){
   var v=$('loginInput').value;
   if(v===PASS){
-    $('loginScreen').style.display='none';
-    $('mainApp').style.display='block';
-    recalc();
+    $('loginOverlay').style.display='none';
   } else {
     $('loginError').style.display='block';
     $('loginInput').value='';
