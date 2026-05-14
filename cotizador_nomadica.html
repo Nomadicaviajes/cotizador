@@ -90,7 +90,7 @@ input[readonly]{background:#f0ebe2;color:#555}
 </div>
 
 <div id="mainApp" style="display:none">
-<div class="app">
+<div class="app" id="appInner">
 
 <header>
   <img src="https://raw.githubusercontent.com/Nomadicaviajes/cotizador/main/5.%20fondo%20para%20voucher.png"
@@ -301,6 +301,7 @@ function checkLogin(){
   if(v===PASS){
     $('loginScreen').style.display='none';
     $('mainApp').style.display='block';
+    recalc();
   } else {
     $('loginError').style.display='block';
     $('loginInput').value='';
