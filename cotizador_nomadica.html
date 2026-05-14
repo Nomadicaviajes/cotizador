@@ -537,28 +537,38 @@ function recalc(){
       +(tt==='neto'?'<div class="rrow rtotal"><span>Precio final</span><span>'+mon+' '+fmt(fin)+'</span></div>':'');
   });
 
-  var pctGR=val('gastosReserva')/100,baseTerr=trasFin-trasCom;
-  hoteles.forEach(function(h){var tar=val('hTar'+h.id),com=val('hCom'+h.id)/100;baseTerr+=tar-tar*com;});
+  // Gastos de reserva: se calculan por combinación, no globalmente
+  // Guardamos la base sin hoteles (traslados + servicios comisionables neto de comisión)
+  var pctGR=val('gastosReserva')/100;
+  var baseTerrSinHoteles=trasFin-trasCom;
   servicios.forEach(function(id){
     if($('sTT'+id)&&$('sTT'+id).value==='com'){
       var tipo=$('sTipo'+id)&&$('sTipo'+id).value,tar=val('sTar'+id),com=val('sCom'+id)/100;
       var porPax=['circuitos','visa','excursiones'].indexOf(tipo)>=0;
-      var base=porPax?tar*paxT:tar;baseTerr+=base-base*com;
+      var base=porPax?tar*paxT:tar;baseTerrSinHoteles+=base-base*com;
     }
   });
-  var gr=baseTerr*pctGR;
-  $('gastosCalc').value=mon+' '+fmt(gr);
+  // Mostramos un GR referencial en el campo (usando primer hotel si hay, si no solo traslados)
+  var grRef=baseTerrSinHoteles*pctGR;
+  if(hoteles.length>0){
+    var h0=hoteles[0],tar0=val('hTar'+h0.id),com0=val('hCom'+h0.id)/100;
+    grRef=(baseTerrSinHoteles+tar0-tar0*com0)*pctGR;
+  }
+  $('gastosCalc').value=mon+' '+fmt(grRef)+(hoteles.length>1?' (varía por opción)':'');
   var desc=$('chkDesc').checked?val('descMonto'):0;
-  window._C={aerFin:aerFin,aerGan:aerGan,trasFin:trasFin,trasCom:trasCom,asistFin:asistFin,asistCom:asistCom,servFin:servFin,servGan:servGan,gr:gr,desc:desc,paxT:paxT,paxP:paxP,adultos:a,ninos:n,infantes:inf,mon:mon};
+  window._C={aerFin:aerFin,aerGan:aerGan,trasFin:trasFin,trasCom:trasCom,asistFin:asistFin,asistCom:asistCom,servFin:servFin,servGan:servGan,pctGR:pctGR,baseTerrSinHoteles:baseTerrSinHoteles,desc:desc,paxT:paxT,paxP:paxP,adultos:a,ninos:n,infantes:inf,mon:mon};
 }
 
-function baseTotal(){var C=window._C||{};return (C.aerFin||0)+(C.trasFin||0)+(C.asistFin||0)+(C.servFin||0)+(C.gr||0)-(C.desc||0);}
-function baseGan(){var C=window._C||{};return (C.aerGan||0)+(C.trasCom||0)+(C.asistCom||0)+(C.servGan||0)-(C.gr||0);}
 function totalConHoteles(hids){
-  var C=window._C||{},hTot=0,hCom=0;
+  var C=window._C||{};
+  var hTot=0,hCom=0;
   hids.forEach(function(hid){var tar=val('hTar'+hid),com=val('hCom'+hid)/100;hTot+=tar;hCom+=tar*com;});
-  var tot=baseTotal()+hTot,gan=baseGan()+hCom,pp=C.paxT>0?tot/C.paxT:0;
-  return {tot:tot,gan:gan,pp:pp,totT:tot*1.015,ppT:pp*1.015};
+  // Gastos de reserva calculados sobre traslados + estos hoteles, neto de comisión
+  var gr=(C.baseTerrSinHoteles+(hTot-hCom))*(C.pctGR||0);
+  var tot=(C.aerFin||0)+(C.trasFin||0)+(C.asistFin||0)+(C.servFin||0)+hTot+gr-(C.desc||0);
+  var gan=(C.aerGan||0)+(C.trasCom||0)+(C.asistCom||0)+(C.servGan||0)+hCom-gr;
+  var pp=C.paxT>0?tot/C.paxT:0;
+  return {tot:tot,gan:gan,pp:pp,totT:tot*1.015,ppT:pp*1.015,gr:gr};
 }
 function getCombinaciones(){
   if(modo==='simple'||destinos.length===0)return null;
@@ -582,6 +592,7 @@ function buildResumen(){
     +'<p style="font-size:11px;color:#888;margin-top:2px">'+fs+' → '+fr+' · '+noches+' noches · '+C.adultos+' adultos, '+C.ninos+' niños, '+C.infantes+' infantes</p></div>';
 
   function desglose(hids){
+    var t=totalConHoteles(hids);
     var rows='';
     if($('chkAereo').checked){
       aereos.forEach(function(aid){
@@ -608,7 +619,7 @@ function buildResumen(){
       var base=porPax?tar*C.paxT:tar,fin=tt==='neto'?base*(1+pct):base;
       rows+='<div class="srow"><span>'+desc+'</span><span>'+mon+' '+fmt(fin)+'</span></div>';
     });
-    rows+='<div class="srow"><span>Gastos de reserva e IVA ('+$('gastosReserva').value+'%)</span><span>'+mon+' '+fmt(C.gr)+'</span></div>';
+    rows+='<div class="srow"><span>Gastos de reserva e IVA ('+$('gastosReserva').value+'%)</span><span>'+mon+' '+fmt(t.gr)+'</span></div>';
     if(C.desc>0)rows+='<div class="srow sdiscount"><span>'+($('descDetalle').value||'Descuento')+'</span><span>- '+mon+' '+fmt(C.desc)+'</span></div>';
     return rows;
   }
