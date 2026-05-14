@@ -73,6 +73,23 @@ input[readonly]{background:#f0ebe2;color:#555}
 </style>
 </head>
 <body>
+<div id="loginScreen" style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:#f0ebe2">
+  <div style="background:#fff;border-radius:14px;border:1px solid #d4cfc6;padding:36px 32px;width:100%;max-width:360px;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,.08)">
+    <div style="background:#374d57;border-radius:10px;padding:18px;margin-bottom:24px">
+      <img src="https://raw.githubusercontent.com/Nomadicaviajes/cotizador/main/5.%20fondo%20para%20voucher.png"
+           alt="Nomádica Viajes" style="height:52px;object-fit:contain"
+           onerror="this.outerHTML='<div style=\'color:#fff;font-size:22px;font-weight:900;letter-spacing:3px\'>NOMÁDICA<div style=\'font-size:9px;color:#c8881a;letter-spacing:4px;margin-top:2px\'>VIAJES</div>
+</div></div>'">
+    </div>
+    <p style="font-size:13px;color:#666;margin-bottom:18px;font-weight:600">Ingresá la contraseña para acceder al cotizador</p>
+    <input id="loginInput" type="password" placeholder="Contraseña" style="width:100%;padding:9px 12px;border:1.5px solid #d4cfc6;border-radius:7px;font-size:14px;margin-bottom:10px;text-align:center"
+      onkeydown="if(event.key==='Enter')checkLogin()">
+    <div id="loginError" style="color:#c33;font-size:12px;margin-bottom:8px;display:none">Contraseña incorrecta</div>
+    <button onclick="checkLogin()" style="width:100%;padding:9px;background:#1b3a5c;color:#fff;border:none;border-radius:7px;font-size:14px;font-weight:700;cursor:pointer">Ingresar</button>
+  </div>
+</div>
+
+<div id="mainApp" style="display:none">
 <div class="app">
 
 <header>
@@ -216,7 +233,7 @@ input[readonly]{background:#f0ebe2;color:#555}
 
   <!-- GASTOS RESERVA -->
   <div class="card">
-    <div class="card-hdr"><div class="card-title">&#128221; Gastos de reserva</div></div>
+    <div class="card-hdr">      <div class="card-title">&#128221; Gastos de reserva e IVA</div></div>
     <div class="g2">
       <div class="f"><label>% sobre servicios terrestres (neto de comision)</label>
         <select id="gastosReserva">
@@ -278,14 +295,27 @@ input[readonly]{background:#f0ebe2;color:#555}
 </div>
 
 <script>
-var MON='USD', modo='simple';
+var PASS='nomadica2025';
+function checkLogin(){
+  var v=$('loginInput').value;
+  if(v===PASS){
+    $('loginScreen').style.display='none';
+    $('mainApp').style.display='block';
+  } else {
+    $('loginError').style.display='block';
+    $('loginInput').value='';
+    $('loginInput').focus();
+  }
+}
+
+
 var aIdx=0,tIdx=0,hIdx=0,sIdx=0,dIdx=0;
 var aereos=[],traslados=[],hoteles=[],servicios=[],destinos=[];
 var aereoImgData=null;
 
 function $(id){return document.getElementById(id);}
 function val(id){return parseFloat($(id)&&$(id).value)||0;}
-function fmt(n){return (Math.round((+n||0)*100)/100).toLocaleString('es-AR',{minimumFractionDigits:0,maximumFractionDigits:2});}
+function fmt(n){return Math.round(+n||0).toLocaleString('es-AR');}
 function margenOpts(def){var s='<option value="0">Sin margen</option>';for(var i=1;i<=20;i++)s+='<option value="'+i+'"'+(i===def?' selected':'')+'>'+i+'%</option>';return s;}
 function comOpts(def){var s='';for(var i=10;i<=20;i++)s+='<option value="'+i+'"'+(i===(def||15)?' selected':'')+'>'+i+'%</option>';return s;}
 
@@ -363,9 +393,8 @@ function addTraslado(){
   div.className='sblock';div.id='T'+id;
   div.innerHTML='<div class="sblock-hdr"><span class="sblock-title">Traslado #'+id+'</span>'
     +'<button class="rm-btn" onclick="removeT('+id+')">&#x2715;</button></div>'
-    +'<div class="g4">'
+    +'<div class="g3">'
     +'<div class="f"><label>Tipo</label><select id="tTipo'+id+'"><option>IN</option><option>OUT</option><option>IN - OUT</option><option>Interhoteles</option><option>Interno</option></select></div>'
-    +'<div class="f"><label>Proveedor</label><input id="tProv'+id+'" type="text" placeholder="Proveedor"></div>'
     +'<div class="f"><label>Tarifa por pax (<span class="mL">'+MON+'</span>)</label><input id="tTar'+id+'" type="number" min="0" placeholder="0" step="0.01"></div>'
     +'<div class="f"><label>Comision</label><select id="tCom'+id+'">'+comOpts(15)+'</select></div>'
     +'</div>'
@@ -793,7 +822,7 @@ function generarWA(){
   }
   traslados.forEach(function(tid){
     var tipo=$('tTipo'+tid)&&$('tTipo'+tid).value||'';
-    var prov=$('tProv'+tid)&&$('tProv'+tid).value||'';
+          var prov='';
     var det=$('tDet'+tid)&&$('tDet'+tid).value||'';
     txt+='🚍 Traslado '+tipo+(prov?' · '+prov:'')+(det?' – '+det:'')+'\n';
   });
@@ -931,8 +960,10 @@ function generarPDF(){
   win.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Cotizacion - '+cliente+'</title>'
     +'<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:Arial,sans-serif;color:#333;padding:28px;max-width:800px;margin:0 auto}'
     +'h3{color:#1b3a5c;border-bottom:2px solid #c8881a;padding-bottom:4px;margin:18px 0 9px;font-size:14px}'
-    +'table{width:100%;border-collapse:collapse;font-size:12px}thead tr{background:#1b3a5c;color:#fff}th{padding:7px 9px;text-align:left}'
-    +'tbody tr:nth-child(even){background:#f8f5f0}td{padding:6px 9px;border-bottom:1px solid #eee}'
+    +'table{width:100%;border-collapse:collapse;font-size:12px;table-layout:fixed}'
+    +'thead tr{background:#1b3a5c;color:#fff}th{padding:7px 9px;text-align:left;word-wrap:break-word}'
+    +'tbody tr:nth-child(even){background:#f8f5f0}td{padding:6px 9px;border-bottom:1px solid #eee;word-wrap:break-word}'
+    +'.col-hotel{width:35%}.col-reg{width:20%}.col-ef{width:18%;text-align:right}.col-tr{width:18%;text-align:right}.col-lnk{width:9%;text-align:center}'
     +'ul{padding-left:18px;line-height:2.1;font-size:13px}@media print{body{padding:10px}}</style></head><body>'
     +'<div style="background:#374d57;color:#fff;padding:16px 22px;border-radius:8px;margin-bottom:18px;display:flex;justify-content:space-between;align-items:center">'
     +'<img src="https://raw.githubusercontent.com/Nomadicaviajes/cotizador/main/5.%20fondo%20para%20voucher.png" style="height:42px;object-fit:contain" onerror="this.outerHTML=\'<div style=\\\'font-size:20px;font-weight:900;letter-spacing:3px\\\'>NOMÁDICA</div>\'">'
