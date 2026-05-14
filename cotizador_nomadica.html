@@ -83,9 +83,9 @@ input[readonly]{background:#f0ebe2;color:#555}
     </div>
     <p style="font-size:13px;color:#666;margin-bottom:18px;font-weight:600">Ingresá la contraseña para acceder al cotizador</p>
     <input id="loginInput" type="password" placeholder="Contraseña" style="width:100%;padding:9px 12px;border:1.5px solid #d4cfc6;border-radius:7px;font-size:14px;margin-bottom:10px;text-align:center"
-      onkeydown="if(event.key==='Enter')checkLogin()">
+      onkeydown="">
     <div id="loginError" style="color:#c33;font-size:12px;margin-bottom:8px;display:none">Contraseña incorrecta</div>
-    <button onclick="checkLogin()" style="width:100%;padding:9px;background:#1b3a5c;color:#fff;border:none;border-radius:7px;font-size:14px;font-weight:700;cursor:pointer">Ingresar</button>
+    <button id="loginBtn" style="width:100%;padding:9px;background:#1b3a5c;color:#fff;border:none;border-radius:7px;font-size:14px;font-weight:700;cursor:pointer">Ingresar</button>
   </div>
 </div>
 
@@ -310,7 +310,12 @@ input[readonly]{background:#f0ebe2;color:#555}
 </div>
 
 <script>
+// ─── LOGIN ───────────────────────────────────────────
 var PASS='nomadica2025';
+document.addEventListener('DOMContentLoaded', function(){
+  $('loginBtn').addEventListener('click', checkLogin);
+  $('loginInput').addEventListener('keydown', function(e){ if(e.key==='Enter') checkLogin(); });
+});
 function checkLogin(){
   var v=$('loginInput').value;
   if(v===PASS){
@@ -1005,6 +1010,18 @@ function generarPDF(){
 }
 
 // ─── INIT ────────────────────────────────────────────
+function checkLogin(){
+  var v=$('loginInput').value;
+  if(v===PASS){
+    $('loginOverlay').style.display='none';
+  } else {
+    $('loginError').style.display='block';
+    $('loginInput').value='';
+    $('loginInput').focus();
+  }
+}
+$('loginBtn').addEventListener('click', checkLogin);
+$('loginInput').addEventListener('keydown', function(e){ if(e.key==='Enter') checkLogin(); });
 $('chkAereo').onchange=function(){$('aereoFields').style.display=this.checked?'block':'none';if(this.checked&&aereos.length===0)addAereo();recalc();};
 $('chkAsist').onchange=function(){$('asistFields').style.display=this.checked?'block':'none';recalc();};
 $('chkDesc').onchange=function(){$('descFields').style.display=this.checked?'block':'none';recalc();};
