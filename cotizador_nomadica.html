@@ -690,8 +690,18 @@ function guardar(){
   if(hist.length>20)hist.pop();
   saveHist(hist);alert('Cotizacion guardada.');
 }
-function getHist(){try{return JSON.parse(localStorage.getItem('nmd5')||'[]');}catch(e){return[];}}
-function saveHist(h){localStorage.setItem('nmd5',JSON.stringify(h));}
+function getHist(){
+  try{
+    // Busca en todas las versiones de localStorage
+    var h5=JSON.parse(localStorage.getItem('nmd5')||'[]');
+    var h4=JSON.parse(localStorage.getItem('nmd4')||'[]');
+    var h3=JSON.parse(localStorage.getItem('nmd3')||'[]');
+    // Combina y elimina duplicados por id
+    var all=h5.concat(h4).concat(h3);
+    var seen={};
+    return all.filter(function(x){if(seen[x.id])return false;seen[x.id]=true;return true;});
+  }catch(e){return[];}
+}function saveHist(h){localStorage.setItem('nmd5',JSON.stringify(h));}
 function renderHist(){
   var hist=getHist();
   $('histCount').textContent=hist.length+' guardadas';
