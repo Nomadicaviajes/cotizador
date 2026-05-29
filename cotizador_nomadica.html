@@ -716,9 +716,14 @@ function renderHist(){
       +'</div></div>';
   }).join('');
 }
-function verH(id){var h=getHist().find(function(x){return x.id===id;});if(!h)return;showTab('resumen');$('resumenContent').innerHTML='<p style="font-size:11px;color:#aaa;margin-bottom:10px">Guardada el '+h.fecha+'</p>'+h.html;}
-function delH(id){if(!confirm('Eliminar?'))return;saveHist(getHist().filter(function(x){return x.id!==id;}));renderHist();}
-function limpiar(){if(confirm('Limpiar todo?'))location.reload();}
+function verH(id){
+  var h=getHist().find(function(x){return x.id===id;});
+  if(!h)return;
+  ['cotizar','resumen','historial'].forEach(function(x){$('tab-'+x).style.display='none';});
+  document.querySelectorAll('.tab').forEach(function(el,i){el.classList.toggle('active',['cotizar','resumen','historial'][i]==='resumen');});
+  $('tab-resumen').style.display='block';
+  $('resumenContent').innerHTML='<p style="font-size:11px;color:#aaa;margin-bottom:10px">Guardada el '+h.fecha+'</p>'+h.html;
+}
 
 function fmtFecha(v){if(!v)return'—';var p=v.split('-');var m=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];return parseInt(p[2])+' de '+m[parseInt(p[1])-1];}
 
