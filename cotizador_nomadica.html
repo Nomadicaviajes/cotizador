@@ -245,7 +245,16 @@ input[readonly]{background:#f0ebe2;color:#555}
   <div class="card">
     <div class="card-hdr">
       <div class="card-title">&#128202; Resumen</div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+        <div style="display:flex;align-items:center;gap:6px;border:1.5px solid var(--border);border-radius:8px;padding:4px 10px;background:#fff">
+          <span style="font-size:11px;font-weight:700;color:#666">TARIFA:</span>
+          <label style="font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:3px">
+            <input type="radio" name="tipoTarifa" id="tarifaGrupo" value="grupo" checked> Grupo
+          </label>
+          <label style="font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:3px">
+            <input type="radio" name="tipoTarifa" id="tarifaPersona" value="persona"> Por persona
+          </label>
+        </div>
         <button class="btn btn-green" onclick="generarWA()">WhatsApp</button>
         <button class="btn btn-accent" onclick="generarPDF()">Descargar PDF</button>
       </div>
@@ -716,20 +725,16 @@ function renderHist(){
       +'</div></div>';
   }).join('');
 }
-function verH(id){
-  var h=getHist().find(function(x){return x.id===id;});
-  if(!h)return;
-  ['cotizar','resumen','historial'].forEach(function(x){$('tab-'+x).style.display='none';});
-  document.querySelectorAll('.tab').forEach(function(el,i){el.classList.toggle('active',['cotizar','resumen','historial'][i]==='resumen');});
-  $('tab-resumen').style.display='block';
-  $('resumenContent').innerHTML='<p style="font-size:11px;color:#aaa;margin-bottom:10px">Guardada el '+h.fecha+'</p>'+h.html;
-}
+function verH(id){var h=getHist().find(function(x){return x.id===id;});if(!h)return;showTab('resumen');$('resumenContent').innerHTML='<p style="font-size:11px;color:#aaa;margin-bottom:10px">Guardada el '+h.fecha+'</p>'+h.html;}
+function delH(id){if(!confirm('Eliminar?'))return;saveHist(getHist().filter(function(x){return x.id!==id;}));renderHist();}
+function limpiar(){if(confirm('Limpiar todo?'))location.reload();}
 
 function fmtFecha(v){if(!v)return'—';var p=v.split('-');var m=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];return parseInt(p[2])+' de '+m[parseInt(p[1])-1];}
 
 function generarWA(){
   recalc();
   var C=window._C;if(!C){alert('Completa los datos primero.');return;}
+  var tipoTarifa=document.querySelector('input[name="tipoTarifa"]:checked').value;
   var mon=C.mon,dest=($('destino').value||'DESTINO').toUpperCase();
   var fs=$('fechaSalida').value,fr=$('fechaRegreso').value,noches=$('noches').value||0;
   var parts=[];
@@ -763,16 +768,22 @@ function generarWA(){
     hoteles.forEach(function(h){
       var id=h.id,nom=($('hNom'+id)&&$('hNom'+id).value||'Hotel').toUpperCase();
       var cat=$('hCat'+id)&&$('hCat'+id).value||'',t=totalConHoteles([id]);
+      var ef=tipoTarifa==='persona'?t.pp:t.tot;
+      var tr=tipoTarifa==='persona'?t.ppT:t.totT;
+      var lbl=tipoTarifa==='persona'?'Tarifa por persona':'Tarifa final por grupo familiar';
       txt+='🛎 '+nom+'\n'+(cat?'Habitación '+cat+'\n':'')
-        +'Tarifa final por grupo familiar:\n'
-        +'💵 Efectivo: '+mon+' '+fmt(t.tot)+'\n'
-        +'🏦 Transferencia: '+mon+' '+fmt(t.totT)+'\n\n';
+        +lbl+':\n'
+        +'💵 Efectivo: '+mon+' '+fmt(ef)+'\n'
+        +'🏦 Transferencia: '+mon+' '+fmt(tr)+'\n\n';
     });
   } else {
     var combos=getCombinaciones();
     if(combos&&combos.length>0){
       combos.forEach(function(hids,idx){
         var t=totalConHoteles(hids);
+        var ef=tipoTarifa==='persona'?t.pp:t.tot;
+        var tr=tipoTarifa==='persona'?t.ppT:t.totT;
+        var lbl=tipoTarifa==='persona'?'Tarifa por persona':'Tarifa final por grupo familiar';
         txt+='*Combinación #'+(idx+1)+'*\n';
         hids.forEach(function(hid,di){
           var dnom=$('dNom'+destinos[di].id)&&$('dNom'+destinos[di].id).value||'Destino';
@@ -780,7 +791,9 @@ function generarWA(){
           var cat=$('hCat'+hid)&&$('hCat'+hid).value||'';
           txt+='🛎 '+dnom+': '+nom+(cat?' · '+cat:'')+'\n';
         });
-        txt+='💵 Efectivo: '+mon+' '+fmt(t.tot)+'\n🏦 Transferencia: '+mon+' '+fmt(t.totT)+'\n\n';
+        txt+=lbl+':\n'
+          +'💵 Efectivo: '+mon+' '+fmt(ef)+'\n'
+          +'🏦 Transferencia: '+mon+' '+fmt(tr)+'\n\n';
       });
     }
   }
