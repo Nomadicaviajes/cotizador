@@ -819,6 +819,7 @@ function generarWA(){
 function closeWA(){$('waModal').classList.remove('open');}
 function copyWA(){$('waText').select();document.execCommand('copy');$('copyBtn').textContent='Copiado!';setTimeout(function(){$('copyBtn').textContent='Copiar texto';},2000);}
 
+
 function generarPDF(){
   recalc();
   var C=window._C;if(!C){alert('Completa los datos primero.');return;}
