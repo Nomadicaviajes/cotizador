@@ -879,9 +879,16 @@ function generarPDF(){
     +'<ul style="color:#555"><li>Tarifas para abonar con '+mon+' billete, deposito o transferencia.</li><li>Tarifas sujetas a confirmacion de disponibilidad al momento de reservar.</li><li>Tarifas no reembolsables en caso de cancelacion.</li>'
     +($('chkAereo').checked?'<li>Los vuelos incluyen equipaje tipo carry on en cabina. No incluye seleccion anticipada de asientos.</li>':'')
     +'</ul></div>'
-    +'<div style="text-align:center;margin-top:20px;font-size:10px;color:#aaa;border-top:1px solid #eee;padding-top:10px">Instagram: @nomadicaviajes · Web: nomadicaviajes.com.ar</div>'
-    +'<script>window.onload=function(){window.print();}<\/script></body></html>');
++'<\/div>'
+  +'<div class="gold-line"><\/div>'
+  +'<div class="pdf-footer">'
+  +'<div class="pdf-footer-left"><strong>Nomádica Viajes<\/strong><br>La Fábrica CO-working · Cofico, Córdoba, Argentina<br>instagram.com\/nomadicaviajes · nomadicaviajes.com.ar<\/div>'
+  +'<div class="pdf-footer-right">Legajo 19126<\/div>'
+  +'<\/div>'
+  +'<\/div>'
+  +'<script>window.onload=function(){window.print();}<\/script><\/body><\/html>');
   win.document.close();
+}
 }
 
 $('chkAereo').onchange=function(){$('aereoFields').style.display=this.checked?'block':'none';if(this.checked&&aereos.length===0)addAereo();recalc();};
