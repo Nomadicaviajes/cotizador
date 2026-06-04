@@ -601,7 +601,17 @@ function renderHist(){
       +'</div></div>';
   }).join('');
 }
-function delH(id){if(!confirm('Eliminar?'))return;saveHist(getHist().filter(function(x){return x.id!==id;}));renderHist();}
+function delH(id){
+  if(!confirm('Eliminar?'))return;
+  ['nmd5','nmd4','nmd3'].forEach(function(key){
+    try{
+      var arr=JSON.parse(localStorage.getItem(key)||'[]');
+      var filtered=arr.filter(function(x){return x.id!==id;});
+      localStorage.setItem(key,JSON.stringify(filtered));
+    }catch(e){}
+  });
+  renderHist();
+}
 function limpiar(){if(confirm('Limpiar todo?'))location.reload();}
 
 function fmtFecha(v){if(!v)return'—';var p=v.split('-');var m=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];return parseInt(p[2])+' de '+m[parseInt(p[1])-1];}
