@@ -694,7 +694,7 @@ function generarPDF(){
       var cat=$('hCat'+id)&&$('hCat'+id).value||'',link=$('hLink'+id)&&$('hLink'+id).value||'';
       var t=totalConHoteles([id]);
       var ef=tipoTarifa==='persona'?t.pp:t.tot,tr=tipoTarifa==='persona'?t.ppT:t.totT;
-      hotelRows+='<tr><td>'+nom+(cat?'<br><em style="font-size:10px;color:#888">'+cat+'</em>':'')+(link?'<br><a href="'+link+'" style="font-size:9px;color:#c8881a;text-decoration:underline;word-break:break-all" target="_blank">'+link+'</a>':'')+'</td><td>'+reg+'</td><td style="text-align:right">'+mon+' '+fmt(ef)+'</td><td style="text-align:right">'+mon+' '+fmt(tr)+'</td></tr>';
+      hotelRows+='<tr><td>'+nom+(cat?'<br><em style="font-size:10px;color:#888">'+cat+'</em>':'')+'</td><td>'+reg+'</td><td style="text-align:right">'+mon+' '+fmt(ef)+'</td><td style="text-align:right">'+mon+' '+fmt(tr)+'</td></tr>';
     });
   } else if(modo==='combo'){
     var combos=getCombinaciones();
