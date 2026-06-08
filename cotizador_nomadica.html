@@ -351,7 +351,7 @@ function hotelHTML(id,title){
     +'<div class="f"><label>Categoria habitacion</label><input id="hCat'+id+'" type="text" placeholder="Ej: Junior Suite..."></div>'
     +'<div class="f"><label>Tarifa total (<span class="mL">'+MON+'</span>)</label><input id="hTar'+id+'" type="number" min="0" placeholder="0" step="0.01"></div>'
     +'<div class="f"><label>Comision</label><select id="hCom'+id+'">'+comOpts(15)+'</select></div>'
-    +'<div class="f"><label>Link</label><input id="hLink'+id+'" type="text" placeholder="https://..."></div></div>'
+    +'</div>'
     +'<div id="hRes'+id+'" class="rbox" style="display:none;margin-top:8px"></div>';
 }
 function addHotelSimple(){
@@ -694,7 +694,7 @@ function generarPDF(){
       var cat=$('hCat'+id)&&$('hCat'+id).value||'',link=$('hLink'+id)&&$('hLink'+id).value||'';
       var t=totalConHoteles([id]);
       var ef=tipoTarifa==='persona'?t.pp:t.tot,tr=tipoTarifa==='persona'?t.ppT:t.totT;
-      hotelRows+='<tr><td>'+nom+(cat?'<br><em style="font-size:10px;color:#888">'+cat+'</em>':'')+'</td><td>'+reg+'</td><td style="text-align:right">'+mon+' '+fmt(ef)+'</td><td style="text-align:right">'+mon+' '+fmt(tr)+'</td></tr>';
+      hotelRows+='<tr><td>'+nom+(cat?'<br><em style="font-size:10px;color:#888">'+cat+'</em>':'')+(link?'<br><a href="'+link+'" style="font-size:9px;color:#c8881a;text-decoration:underline;word-break:break-all" target="_blank">'+link+'</a>':'')+'</td><td>'+reg+'</td><td style="text-align:right">'+mon+' '+fmt(ef)+'</td><td style="text-align:right">'+mon+' '+fmt(tr)+'</td></tr>';
     });
   } else if(modo==='combo'){
     var combos=getCombinaciones();
