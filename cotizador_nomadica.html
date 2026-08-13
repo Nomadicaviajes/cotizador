@@ -694,13 +694,15 @@ function generarWA(){
   servicios.forEach(function(sid){txt+='➕ '+($('sDesc'+sid)&&$('sDesc'+sid).value||$('sTipo'+sid)&&$('sTipo'+sid).value)+'\n';});
   txt+='🆘 Soporte y guardia 24hs ante cambios o reprogramaciones\n';
   txt+='📱 Nomadica App: todo el viaje en un solo lugar\n\n';
-  var lbl=tipoTarifa==='persona'?'Tarifa por persona':'Tarifa final por grupo familiar';
   if(modo==='simple'){
     hoteles.forEach(function(h){
       var id=h.id,nom=($('hNom'+id)&&$('hNom'+id).value||'Hotel').toUpperCase();
-      var cat=$('hCat'+id)&&$('hCat'+id).value||'',t=totalConHoteles([id]);
+      var cat=$('hCat'+id)&&$('hCat'+id).value||'';
+      var reg=$('hReg'+id)&&$('hReg'+id).value||'';
+      var t=totalConHoteles([id]);
       var ef=tipoTarifa==='persona'?t.pp:t.tot,tr=tipoTarifa==='persona'?t.ppT:t.totT;
-      txt+='🛎 '+nom+'\n'+(cat?'Habitación '+cat+'\n':'')+lbl+':\n💵 Efectivo: '+mon+' '+fmt(ef)+'\n🏦 Transferencia: '+mon+' '+fmt(tr)+'\n\n';
+      var lbl=tipoTarifa==='persona'?'Precio final por persona':'Precio final por grupo familiar';
+      txt+='🛎 '+nom+'\n'+(cat?'Habitación '+cat+'\n':'')+(reg?'Régimen: '+reg+'\n':'')+lbl+':\n💵 Efectivo: '+mon+' '+fmt(ef)+'\n🏦 Transferencia: '+mon+' '+fmt(tr)+'\n\n';
     });
   } else {
     var combos=getCombinaciones();
@@ -708,8 +710,15 @@ function generarWA(){
       combos.forEach(function(hids,idx){
         var t=totalConHoteles(hids);
         var ef=tipoTarifa==='persona'?t.pp:t.tot,tr=tipoTarifa==='persona'?t.ppT:t.totT;
+        var lbl=tipoTarifa==='persona'?'Precio final por persona':'Precio final por grupo familiar';
         txt+='*Combinación #'+(idx+1)+'*\n';
-        hids.forEach(function(hid,di){var dnom=$('dNom'+destinos[di].id)&&$('dNom'+destinos[di].id).value||'Destino';var nom=($('hNom'+hid)&&$('hNom'+hid).value||'Hotel').toUpperCase();var cat=$('hCat'+hid)&&$('hCat'+hid).value||'';txt+='🛎 '+dnom+': '+nom+(cat?' · '+cat:'')+'\n';});
+        hids.forEach(function(hid,di){
+          var dnom=$('dNom'+destinos[di].id)&&$('dNom'+destinos[di].id).value||'Destino';
+          var nom=($('hNom'+hid)&&$('hNom'+hid).value||'Hotel').toUpperCase();
+          var cat=$('hCat'+hid)&&$('hCat'+hid).value||'';
+          var reg=$('hReg'+hid)&&$('hReg'+hid).value||'';
+          txt+='🛎 '+dnom+': '+nom+(cat?' · '+cat:'')+(reg?' · '+reg:'')+'\n';
+        });
         txt+=lbl+':\n💵 Efectivo: '+mon+' '+fmt(ef)+'\n🏦 Transferencia: '+mon+' '+fmt(tr)+'\n\n';
       });
     }
@@ -719,7 +728,7 @@ function generarWA(){
   if(!$('chkAsist').checked)txt+='💊 Asistencia al viajero.\n*Hasta 6 cuotas sin interés: Coris, Assist Card o Universal Assistance.\n';
   txt+='🤳🏼 Excursiones\n🚘 Traslados privados\n🏖️ Upgrade de habitación\n\n';
   txt+='💵 FORMAS DE PAGO\n';
-  if(C.aerFin>0)txt+='-Seña: para garantizar la reserva (precio de los vuelos) – '+mon+' '+fmt(C.aerFin)+'.\n';
+  if(C.aerFin>0)txt+='-Seña: para garantizar la reserva (precio de los vuelos) – '+mon+' '+fmt(C.aerFin)+' en total por todos los pasajeros.\n';
   txt+='-Saldo: hasta un mes antes del viaje.\n\nSe tiene hasta 30 días antes de viajar para terminar de saldar el 100% del total de la reserva. Se pueden ir haciendo entregas parciales del monto que decida el pasajero.\n\n';
   txt+='🛑INFORMACIÓN ADICIONAL\n*Tarifas para abonar con '+mon+' billete, depósito o transferencia.\n*Tarifas sujetas a confirmación de disponibilidad al momento de reservar.\n*Tarifas no reembolsables en caso de cancelación\n';
   if($('chkAereo').checked)txt+='*Los vuelos incluyen equipaje tipo carry on en cabina, no en bodega. No incluye selección anticipada de asientos.\n';
@@ -739,7 +748,7 @@ function generarPDF(){
   if(C.adultos)parts.push(C.adultos+' adulto'+(C.adultos!==1?'s':''));
   if(C.ninos)parts.push(C.ninos+' niño'+(C.ninos!==1?'s':''));
   if(C.infantes)parts.push(C.infantes+' infante'+(C.infantes!==1?'s':''));
-  var colTarifa=tipoTarifa==='persona'?'Precio final por persona':'Precio final por grupo familiar';
+  var colTarifa=tipoTarifa==='persona'?'Precio final de todo el paquete por persona':'Precio final por grupo familiar';
   var svcList='';
   if($('chkAereo').checked){aereos.forEach(function(aid){var aer=$('aAer'+aid)&&$('aAer'+aid).value||'',det=$('aDet'+aid)&&$('aDet'+aid).value;svcList+='<li><strong>Vuelo</strong> con '+aer+(det?'<em style="font-size:11px;color:#888"> · '+det+'</em>':'')+'</li>';});}
   traslados.forEach(function(tid){var tipo=$('tTipo'+tid)&&$('tTipo'+tid).value,det=$('tDet'+tid)&&$('tDet'+tid).value||'';svcList+='<li>Traslado <strong>'+tipo+'</strong>'+(det?'<em style="font-size:11px;color:#888"> · '+det+'</em>':'')+'</li>';});
