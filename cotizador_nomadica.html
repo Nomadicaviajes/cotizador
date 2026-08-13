@@ -794,7 +794,7 @@ function generarPDF(){
   var aerImg=aereoImgData?'<div style="margin:14px 0"><img src="'+aereoImgData+'" style="max-width:100%;border-radius:6px;border:1px solid #e0d8cc"></div>':'';
   var descHTML=C.desc>0?'<div style="background:#fff5f5;border:1px solid #fcc;border-radius:6px;padding:8px 14px;margin:10px 0;font-size:12px;color:#c33"><strong>Descuento: '+($('descDetalle').value||'Descuento')+'</strong> — '+mon+' '+fmt(C.desc)+'</div>':'';
   var pagoHTML=C.aerFin>0
-    ?'<ul><li><strong>Seña:</strong> para garantizar la reserva (precio de los vuelos) – '+mon+' '+fmt(C.aerFin)+'</li><li><strong>Saldo:</strong> hasta 30 días antes de la salida</li><li>Posibilidad de pagos parciales</li></ul>'
+    ?'<ul><li><strong>Seña:</strong> para garantizar la reserva (precio de los vuelos) – '+mon+' '+fmt(C.aerFin)+', en total por todos los pasajeros</li><li><strong>Saldo:</strong> hasta 30 días antes de la salida</li><li>Posibilidad de pagos parciales</li></ul>'
     :'<ul><li><strong>Saldo:</strong> hasta 30 días antes de la salida</li><li>Posibilidad de pagos parciales</li></ul>';
 
   var pdfHTML='<!DOCTYPE html><html><head><meta charset="UTF-8">'
