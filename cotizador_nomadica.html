@@ -263,6 +263,7 @@ function comOpts(def){var s='';for(var i=10;i<=20;i++)s+='<option value="'+i+'"'
 
 // LOGIN
 var PASS='nomadica2025';
+(function(){var p=new URLSearchParams(location.search).get('auth');if(p===PASS){$('loginOverlay').style.display='none';}})();
 $('loginBtn').onclick=function(){checkLogin();};
 $('loginInput').onkeydown=function(e){if(e.key==='Enter')checkLogin();};
 function checkLogin(){
