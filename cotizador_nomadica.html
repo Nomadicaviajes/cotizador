@@ -225,7 +225,7 @@ input[readonly]{background:#f0ebe2;color:#555}
           <label style="font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:3px"><input type="radio" name="tipoTarifa" value="persona"> Por persona</label>
         </div>
         <button class="btn btn-green" onclick="generarWA()">WhatsApp</button>
-        <button class="btn btn-accent" onclick="generarPDF()">Descargar PDF</button>
+        <button class="btn btn-accent" onclick="generarHTML()">&#128196; HTML / PDF</button>
       </div>
     </div>
     <div id="resumenContent"></div>
@@ -263,7 +263,6 @@ function comOpts(def){var s='';for(var i=10;i<=20;i++)s+='<option value="'+i+'"'
 
 // LOGIN
 var PASS='nomadica2025';
-(function(){var p=new URLSearchParams(location.search).get('auth');if(p===PASS){$('loginOverlay').style.display='none';}})();
 $('loginBtn').onclick=function(){checkLogin();};
 $('loginInput').onkeydown=function(e){if(e.key==='Enter')checkLogin();};
 function checkLogin(){
@@ -739,7 +738,305 @@ function generarWA(){
 function closeWA(){$('waModal').classList.remove('open');}
 function copyWA(){$('waText').select();document.execCommand('copy');$('copyBtn').textContent='Copiado!';setTimeout(function(){$('copyBtn').textContent='Copiar texto';},2000);}
 
-function generarPDF(){
+async function generarHTML(){
+  recalc();
+  var C=window._C;if(!C){alert('Completá los datos primero.');return;}
+  var tipoTarifa=document.querySelector('input[name="tipoTarifa"]:checked').value;
+  var mon=C.mon;
+  var cliente=$('cliente').value||'—';
+  var destino=$('destino').value||'—';
+  var vendedor=$('vendedor').value||'';
+  var fs=$('fechaSalida').value||'';
+  var fr=$('fechaRegreso').value||'';
+  var noches=$('noches').value||0;
+
+  // Mes/año de la cotización
+  var mesAnio='';
+  if(fs){var d=new Date(fs);var meses=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];mesAnio=meses[d.getMonth()]+' '+d.getFullYear();}
+
+  // Fechas formateadas
+  var fechasCortas='';
+  if(fs&&fr){
+    var ds=new Date(fs),dr=new Date(fr);
+    var mesesCortos=['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DIC'];
+    fechasCortas=ds.getDate()+'-'+dr.getDate()+' '+mesesCortos[ds.getMonth()];
+  }
+
+  // Pasajeros
+  var parts=[];
+  if(C.adultos)parts.push(C.adultos+' adulto'+(C.adultos!==1?'s':''));
+  if(C.ninos)parts.push(C.ninos+' niño'+(C.ninos!==1?'s':''));
+  if(C.infantes)parts.push(C.infantes+' infante'+(C.infantes!==1?'s':''));
+  var paxStr=parts.join(' + ');
+
+  // Régimen portada: si todos los hoteles tienen el mismo, usarlo
+  var regimenes=hoteles.map(function(h){return $('hReg'+h.id)&&$('hReg'+h.id).value||'';});
+  var regimenPortada=regimenes.length>0&&regimenes.every(function(r){return r===regimenes[0];})?regimenes[0]:'';
+  var bajadaPortada=destino+(regimenPortada?' · '+regimenPortada:'');
+
+  // Precio desde (hotel más barato)
+  var precioDesde=Infinity;
+  hoteles.forEach(function(h){
+    var t=totalConHoteles([h.id]);
+    var precio=tipoTarifa==='persona'?t.pp:t.tot;
+    if(precio<precioDesde)precioDesde=precio;
+  });
+  if(precioDesde===Infinity)precioDesde=0;
+  var lblPrecio=tipoTarifa==='persona'?'por persona':'por grupo familiar';
+
+  // Servicios incluidos
+  var serviciosIncluidos=[];
+  if($('chkAereo').checked){
+    aereos.forEach(function(aid){
+      var aer=$('aAer'+aid)&&$('aAer'+aid).value||'Vuelo';
+      var det=$('aDet'+aid)&&$('aDet'+aid).value||'';
+      serviciosIncluidos.push({nombre:'Vuelo '+aer,detalle:det});
+    });
+  }
+  traslados.forEach(function(tid){
+    var tipo=$('tTipo'+tid)&&$('tTipo'+tid).value||'';
+    var det=$('tDet'+tid)&&$('tDet'+tid).value||'';
+    serviciosIncluidos.push({nombre:'Traslado '+tipo,detalle:det});
+  });
+  if(noches)serviciosIncluidos.push({nombre:'Alojamiento',detalle:noches+' noches'+(regimenPortada?' · '+regimenPortada:'')});
+  if($('chkAsist').checked){
+    var emp=$('asistEmpresa');
+    serviciosIncluidos.push({nombre:'Asistencia al viajero',detalle:emp.options[emp.selectedIndex].text.split('(')[0].trim()});
+  }
+  servicios.forEach(function(sid){
+    var desc=$('sDesc'+sid)&&$('sDesc'+sid).value||$('sTipo'+sid)&&$('sTipo'+sid).value;
+    serviciosIncluidos.push({nombre:desc,detalle:''});
+  });
+  serviciosIncluidos.push({nombre:'Soporte y guardia',detalle:'24 horas'});
+  serviciosIncluidos.push({nombre:'Nomadica App',detalle:'Todo el viaje en un solo lugar'});
+
+  // Hoteles
+  var hotelesData=hoteles.map(function(h){
+    var id=h.id;
+    var t=totalConHoteles([id]);
+    var ef=tipoTarifa==='persona'?t.pp:t.tot;
+    var tr=tipoTarifa==='persona'?t.ppT:t.totT;
+    return {
+      nombre:$('hNom'+id)&&$('hNom'+id).value||'Hotel',
+      categoria:$('hCat'+id)&&$('hCat'+id).value||'',
+      regimen:$('hReg'+id)&&$('hReg'+id).value||'',
+      efectivo:fmt(ef),
+      transferencia:fmt(tr)
+    };
+  });
+
+  // Formas de pago
+  var formasPago=[];
+  if(C.aerFin>0)formasPago.push('Seña: para garantizar la reserva (precio de los vuelos) – '+mon+' '+fmt(C.aerFin)+', en total por todos los pasajeros.');
+  formasPago.push('Saldo: hasta 30 días antes de la salida.');
+  formasPago.push('Posibilidad de pagos parciales.');
+
+  // Imagen del vuelo en base64
+  var imgTag=aereoImgData?'<img src="'+aereoImgData+'" style="max-width:100%;margin-top:20px">':'(No se adjuntó imagen del itinerario de vuelo)';
+
+  // Armar el prompt
+  var prompt=`Sos el diseñador de cotizaciones de Nomádica Viajes. Tu tarea es tomar los datos de un viaje y devolver una cotización en HTML usando EXACTAMENTE la plantilla adjunta.
+
+REGLAS:
+1. Usá el HTML de la plantilla como molde EXACTO. No cambies estructura, estilos, fuentes, colores, tamaños ni clases. Solo reemplazás el contenido de texto.
+2. Reemplazá únicamente lo marcado con <!-- VARIABLE: ... -->:
+   - Portada: destino, bajada/régimen, mes/año, fechas, estadía, precio "desde" y etiqueta (por persona o por grupo familiar).
+   - Pág 2 "Incluye": filas de servicios incluidos.
+   - Pág 2 "Vuelos": aerolínea + en lugar de la tabla de tramos, insertá esta imagen del itinerario: ${imgTag}
+   - Pág 3 "Alojamiento": filas de hoteles con precio efectivo y transferencia. La leyenda "por persona" o "por grupo familiar" según corresponda.
+   - Pág 3: formas de pago y opcionales.
+3. Si hay MÁS o MENOS filas que en el ejemplo, duplicá o eliminá filas copiando el mismo formato HTML. No inventes campos nuevos ni cambies el diseño.
+4. Mantené el tono Nomádica: claro, cálido, sin relleno. Números en formato USD 1.801 (punto de miles).
+5. Devolvé el HTML COMPLETO y listo para abrir en el navegador e imprimir a PDF. No agregues explicaciones fuera del HTML.
+
+DATOS DE LA COTIZACIÓN:
+- Destino: ${destino}
+- Bajada portada: ${bajadaPortada}
+- Mes/año: ${mesAnio}
+- Fechas: ${fechasCortas}
+- Estadía: ${noches} noches
+- Pasajeros: ${paxStr}
+- Precio desde: ${mon} ${fmt(precioDesde)} (${lblPrecio})
+- Vendedor: ${vendedor}
+
+SERVICIOS INCLUIDOS:
+${serviciosIncluidos.map(function(s){return '- '+s.nombre+(s.detalle?' · '+s.detalle:'');}).join('\n')}
+
+HOTELES (${tipoTarifa==='persona'?'precio por persona':'precio por grupo familiar'}):
+${hotelesData.map(function(h,i){return (i+1)+'. '+h.nombre+(h.categoria?' · '+h.categoria:'')+(h.regimen?' · '+h.regimen:'')+' → Efectivo: '+mon+' '+h.efectivo+' / Transferencia: '+mon+' '+h.transferencia;}).join('\n')}
+
+FORMAS DE PAGO:
+${formasPago.join('\n')}
+
+OPCIONALES:
+- Excursiones y actividades locales
+- Traslados privados adicionales
+- Upgrade de habitación
+- Asistencia al viajero con cobertura médica internacional
+
+PLANTILLA HTML:
+${PLANTILLA_HTML}`;
+
+  // Mostrar loading
+  var loadWin=window.open('','_blank');
+  loadWin.document.write('<html><body style="font-family:Arial;display:flex;align-items:center;justify-content:center;height:100vh;background:#f5f0e8"><div style="text-align:center"><div style="font-size:48px">✈</div><p style="font-size:18px;color:#374d57;margin-top:16px">Generando cotización...</p></div></body></html>');
+
+  try{
+    var resp=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-6',
+        max_tokens:8000,
+        messages:[{role:'user',content:prompt}]
+      })
+    });
+    var data=await resp.json();
+    var htmlResult=data.content&&data.content[0]&&data.content[0].text||'';
+    // Limpiar posibles backticks
+    htmlResult=htmlResult.replace(/^```html\s*/i,'').replace(/```\s*$/,'').trim();
+    loadWin.document.open();
+    loadWin.document.write(htmlResult);
+    loadWin.document.close();
+  }catch(err){
+    loadWin.document.open();
+    loadWin.document.write('<html><body style="font-family:Arial;padding:40px"><h2 style="color:#c33">Error al generar la cotización</h2><p>'+err.message+'</p></body></html>');
+    loadWin.document.close();
+  }
+}
+
+// Plantilla HTML de Nomádica (Juli)
+var PLANTILLA_HTML=`<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cotización Nomádica</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;0,6..96,600;0,6..96,700;1,6..96,400;1,6..96,500;1,6..96,600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Hanken+Grotesk:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #d8d4cc; font-family: 'Hanken Grotesk', sans-serif; }
+  .page { width: 1080px; height: 1920px; margin: 0 auto 36px; position: relative; overflow: hidden; box-shadow: 0 12px 44px rgba(0,0,0,.18); }
+  @media print {
+    @page { size: 1080px 1920px; margin: 0; }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    body { background: #fff; }
+    .page { margin: 0; box-shadow: none; break-after: page; }
+    .page:last-child { break-after: auto; }
+  }
+</style>
+</head>
+<body>
+  <!-- PÁGINA 1 · PORTADA -->
+  <div class="page" style="background:#1E3539;color:#EFE3CC;font-family:'Hanken Grotesk',sans-serif">
+    <div style="position:absolute;inset:0;background:radial-gradient(120% 80% at 50% 12%,rgba(216,161,43,.16),transparent 55%)"></div>
+    <div style="position:absolute;inset:46px;border:1.5px solid rgba(216,161,43,.55);pointer-events:none"></div>
+    <div style="position:relative;padding:96px;height:100%;display:flex;flex-direction:column;text-align:center;align-items:center">
+      <div style="font-family:'Courier Prime',monospace;font-size:28px;letter-spacing:9px;text-transform:uppercase;color:#D8A12B;white-space:nowrap">Nomádica Viajes</div>
+      <!-- VARIABLE: mes/año -->
+      <div style="font-family:'Courier Prime',monospace;font-size:30px;letter-spacing:4px;text-transform:uppercase;color:rgba(239,227,204,.6);margin-top:22px;white-space:nowrap">Cotización · MESANIO</div>
+      <div style="flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center">
+        <div style="font-family:'Courier Prime',monospace;font-size:22px;letter-spacing:6px;text-transform:uppercase;color:rgba(239,227,204,.7)">El viaje</div>
+        <!-- VARIABLE: destino -->
+        <div style="font-family:'Bodoni Moda',serif;font-style:italic;font-weight:500;font-size:184px;line-height:.88;letter-spacing:-3px;color:#EFE3CC;margin:10px 0 6px">DESTINO</div>
+        <div style="width:120px;height:1.5px;background:#D8A12B;margin:30px 0"></div>
+        <!-- VARIABLE: bajada/régimen -->
+        <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:46px;color:rgba(239,227,204,.85)">BAJADA</div>
+      </div>
+      <!-- VARIABLE: fechas, estadía, precio desde -->
+      <div style="display:flex;gap:78px;font-family:'Courier Prime',monospace;color:rgba(239,227,204,.85);margin-bottom:26px;align-items:stretch">
+        <div><div style="font-size:32px;letter-spacing:4px;text-transform:uppercase;color:#D8A12B">Fechas</div><div style="font-family:'Bodoni Moda',serif;font-size:38px;margin-top:12px;color:#EFE3CC">FECHAS</div></div>
+        <div style="width:1px;background:rgba(216,161,43,.4)"></div>
+        <div><div style="font-size:32px;letter-spacing:4px;text-transform:uppercase;color:#D8A12B">Estadía</div><div style="font-family:'Bodoni Moda',serif;font-size:38px;margin-top:12px;color:#EFE3CC">NOCHES noches</div></div>
+        <div style="width:1px;background:rgba(216,161,43,.4)"></div>
+        <div><div style="font-size:32px;letter-spacing:4px;text-transform:uppercase;color:#D8A12B">Desde</div><div style="font-family:'Bodoni Moda',serif;font-size:38px;margin-top:12px;color:#EFE3CC">PRECIO</div><div style="font-size:22px;color:rgba(239,227,204,.6);margin-top:4px">LBLPRECIO</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PÁGINA 2 · INCLUYE + VUELOS -->
+  <div class="page" style="background:#F4ECDB;color:#22201B;font-family:'Hanken Grotesk',sans-serif">
+    <div style="padding:90px 88px;height:100%;display:flex;flex-direction:column">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;font-family:'Courier Prime',monospace;font-size:20px;letter-spacing:4px;text-transform:uppercase;color:#8a8170">
+        <span>DESTINO</span><span>Nomádica · 02</span>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:30px;margin-top:70px">
+        <div style="font-family:'Bodoni Moda',serif;font-size:130px;font-weight:600;color:#2B484E;line-height:.8">01</div>
+        <div style="font-family:'Bodoni Moda',serif;font-style:italic;font-size:72px;color:#22201B">Incluye</div>
+      </div>
+      <!-- VARIABLE: servicios incluidos -->
+      <div style="margin-top:46px;display:flex;flex-direction:column">
+        FILAS_SERVICIOS
+      </div>
+      <div style="display:flex;align-items:baseline;gap:30px;margin-top:60px">
+        <div style="font-family:'Bodoni Moda',serif;font-size:130px;font-weight:600;color:#2B484E;line-height:.8">02</div>
+        <div style="font-family:'Bodoni Moda',serif;font-style:italic;font-size:72px;color:#22201B">Vuelos</div>
+        <!-- VARIABLE: aerolínea -->
+        <div style="font-family:'Courier Prime',monospace;font-size:22px;color:#8a8170;letter-spacing:2px;text-transform:uppercase;align-self:center;margin-left:auto">AEROLINEA</div>
+      </div>
+      <!-- VARIABLE: imagen itinerario vuelo -->
+      <div style="margin-top:20px">IMAGEN_VUELO</div>
+      <div style="flex:1"></div>
+      <div style="text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:34px;color:#8a8170">Nomádica Viajes — Dónde empieza tu aventura</div>
+    </div>
+  </div>
+
+  <!-- PÁGINA 3 · ALOJAMIENTO + PAGO + CLUB -->
+  <div class="page" style="background:#F4ECDB;color:#22201B;font-family:'Hanken Grotesk',sans-serif">
+    <div style="padding:90px 88px 0;height:100%;display:flex;flex-direction:column">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;font-family:'Courier Prime',monospace;font-size:20px;letter-spacing:4px;text-transform:uppercase;color:#8a8170">
+        <span>DESTINO</span><span>Nomádica · 03</span>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:30px;margin-top:60px">
+        <div style="font-family:'Bodoni Moda',serif;font-size:120px;font-weight:600;color:#2B484E;line-height:.8">03</div>
+        <div style="font-family:'Bodoni Moda',serif;font-style:italic;font-size:66px;color:#22201B">Alojamiento</div>
+        <!-- VARIABLE: por persona o por grupo familiar -->
+        <div style="font-family:'Courier Prime',monospace;font-size:20px;color:#8a8170;letter-spacing:2px;text-transform:uppercase;align-self:center;margin-left:auto">LBLPRECIO</div>
+      </div>
+      <!-- VARIABLE: filas de hoteles -->
+      <div style="margin-top:38px">
+        FILAS_HOTELES
+      </div>
+      <div style="font-family:'Courier Prime',monospace;font-size:19px;color:#8a8170;margin-top:12px">Transferencia: efectivo + 1.5%</div>
+      <div style="display:flex;gap:56px;margin-top:50px">
+        <div style="flex:1">
+          <div style="font-family:'Courier Prime',monospace;font-size:20px;letter-spacing:3px;text-transform:uppercase;color:#2B484E">Formas de pago</div>
+          <!-- VARIABLE: condiciones de pago -->
+          <div style="margin-top:18px;font-size:25px;line-height:1.55;color:#3a352b">FORMAS_PAGO</div>
+        </div>
+        <div style="flex:1">
+          <div style="font-family:'Courier Prime',monospace;font-size:20px;letter-spacing:3px;text-transform:uppercase;color:#2B484E">Opcionales</div>
+          <div style="margin-top:18px;font-size:25px;line-height:1.7;color:#3a352b">
+            <div>Excursiones locales</div>
+            <div>Traslados privados</div>
+            <div>Upgrade de habitación</div>
+            <div>Asistencia al viajero</div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:50px;border-top:1.5px solid #2B484E;border-bottom:1.5px solid #2B484E;padding:34px 0;display:flex;align-items:center;gap:24px">
+        <span style="color:#2B484E;font-size:54px;line-height:1">★</span>
+        <div>
+          <div style="font-family:'Bodoni Moda',serif;font-style:italic;font-size:42px;color:#22201B">Nomadic Club</div>
+          <div style="font-size:24px;color:#3a352b;margin-top:6px;max-width:760px">Sumás puntos canjeables por descuentos y experiencias. <b>1 punto = 1 USD</b> en compras dentro de Nomádica.</div>
+        </div>
+      </div>
+      <div style="margin-top:26px;font-family:'Courier Prime',monospace;font-size:17px;letter-spacing:.5px;color:#8a8170;line-height:1.7">
+        Tarifas en USD billete, depósito o transferencia · Sujetas a confirmación de disponibilidad · No reembolsables ante cancelación · Equipaje carry on en cabina, sin selección anticipada de asientos.
+      </div>
+      <div style="flex:1"></div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;padding:26px 0 30px;border-top:1.5px solid rgba(34,32,27,.25)">
+        <div style="font-family:'Bodoni Moda',serif;font-size:28px;color:#22201B">Nomádica Viajes</div>
+        <div style="font-family:'Courier Prime',monospace;font-size:18px;color:#8a8170;text-align:right">Cofico, Córdoba · @nomadicaviajes · Legajo 19126</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>`;
+
+
   recalc();
   var C=window._C;if(!C){alert('Completa los datos primero.');return;}
   var tipoTarifa=document.querySelector('input[name="tipoTarifa"]:checked').value;
