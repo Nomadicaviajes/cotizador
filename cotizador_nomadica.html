@@ -225,7 +225,7 @@ input[readonly]{background:#f0ebe2;color:#555}
           <label style="font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:3px"><input type="radio" name="tipoTarifa" value="persona"> Por persona</label>
         </div>
         <button class="btn btn-green" onclick="generarWA()">WhatsApp</button>
-        <button class="btn btn-accent" onclick="generarPDF()">Descargar PDF</button>
+        <button class="btn btn-accent" onclick="generarHTML()">&#128196; HTML / PDF</button>
       </div>
     </div>
     <div id="resumenContent"></div>
@@ -739,7 +739,176 @@ function generarWA(){
 function closeWA(){$('waModal').classList.remove('open');}
 function copyWA(){$('waText').select();document.execCommand('copy');$('copyBtn').textContent='Copiado!';setTimeout(function(){$('copyBtn').textContent='Copiar texto';},2000);}
 
-function generarPDF(){
+async function generarHTML(){
+  recalc();
+  var C=window._C;if(!C){alert('Completá los datos primero.');return;}
+  var tipoTarifa=document.querySelector('input[name="tipoTarifa"]:checked').value;
+  var mon=C.mon;
+  var cliente=$('cliente').value||'—';
+  var destino=$('destino').value||'—';
+  var vendedor=$('vendedor').value||'';
+  var fs=$('fechaSalida').value||'';
+  var fr=$('fechaRegreso').value||'';
+  var noches=$('noches').value||0;
+
+  // Mes/año de la cotización
+  var mesAnio='';
+  if(fs){var d=new Date(fs);var meses=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];mesAnio=meses[d.getMonth()]+' '+d.getFullYear();}
+
+  // Fechas formateadas
+  var fechasCortas='';
+  if(fs&&fr){
+    var ds=new Date(fs),dr=new Date(fr);
+    var mesesCortos=['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DIC'];
+    fechasCortas=ds.getDate()+'-'+dr.getDate()+' '+mesesCortos[ds.getMonth()];
+  }
+
+  // Pasajeros
+  var parts=[];
+  if(C.adultos)parts.push(C.adultos+' adulto'+(C.adultos!==1?'s':''));
+  if(C.ninos)parts.push(C.ninos+' niño'+(C.ninos!==1?'s':''));
+  if(C.infantes)parts.push(C.infantes+' infante'+(C.infantes!==1?'s':''));
+  var paxStr=parts.join(' + ');
+
+  // Régimen portada: si todos los hoteles tienen el mismo, usarlo
+  var regimenes=hoteles.map(function(h){return $('hReg'+h.id)&&$('hReg'+h.id).value||'';});
+  var regimenPortada=regimenes.length>0&&regimenes.every(function(r){return r===regimenes[0];})?regimenes[0]:'';
+  var bajadaPortada=destino+(regimenPortada?' · '+regimenPortada:'');
+
+  // Precio desde (hotel más barato)
+  var precioDesde=Infinity;
+  hoteles.forEach(function(h){
+    var t=totalConHoteles([h.id]);
+    var precio=tipoTarifa==='persona'?t.pp:t.tot;
+    if(precio<precioDesde)precioDesde=precio;
+  });
+  if(precioDesde===Infinity)precioDesde=0;
+  var lblPrecio=tipoTarifa==='persona'?'por persona':'por grupo familiar';
+
+  // Servicios incluidos
+  var serviciosIncluidos=[];
+  if($('chkAereo').checked){
+    aereos.forEach(function(aid){
+      var aer=$('aAer'+aid)&&$('aAer'+aid).value||'Vuelo';
+      var det=$('aDet'+aid)&&$('aDet'+aid).value||'';
+      serviciosIncluidos.push({nombre:'Vuelo '+aer,detalle:det});
+    });
+  }
+  traslados.forEach(function(tid){
+    var tipo=$('tTipo'+tid)&&$('tTipo'+tid).value||'';
+    var det=$('tDet'+tid)&&$('tDet'+tid).value||'';
+    serviciosIncluidos.push({nombre:'Traslado '+tipo,detalle:det});
+  });
+  if(noches)serviciosIncluidos.push({nombre:'Alojamiento',detalle:noches+' noches'+(regimenPortada?' · '+regimenPortada:'')});
+  if($('chkAsist').checked){
+    var emp=$('asistEmpresa');
+    serviciosIncluidos.push({nombre:'Asistencia al viajero',detalle:emp.options[emp.selectedIndex].text.split('(')[0].trim()});
+  }
+  servicios.forEach(function(sid){
+    var desc=$('sDesc'+sid)&&$('sDesc'+sid).value||$('sTipo'+sid)&&$('sTipo'+sid).value;
+    serviciosIncluidos.push({nombre:desc,detalle:''});
+  });
+  serviciosIncluidos.push({nombre:'Soporte y guardia',detalle:'24 horas'});
+  serviciosIncluidos.push({nombre:'Nomadica App',detalle:'Todo el viaje en un solo lugar'});
+
+  // Hoteles
+  var hotelesData=hoteles.map(function(h){
+    var id=h.id;
+    var t=totalConHoteles([id]);
+    var ef=tipoTarifa==='persona'?t.pp:t.tot;
+    var tr=tipoTarifa==='persona'?t.ppT:t.totT;
+    return {
+      nombre:$('hNom'+id)&&$('hNom'+id).value||'Hotel',
+      categoria:$('hCat'+id)&&$('hCat'+id).value||'',
+      regimen:$('hReg'+id)&&$('hReg'+id).value||'',
+      efectivo:fmt(ef),
+      transferencia:fmt(tr)
+    };
+  });
+
+  // Formas de pago
+  var formasPago=[];
+  if(C.aerFin>0)formasPago.push('Seña: para garantizar la reserva (precio de los vuelos) – '+mon+' '+fmt(C.aerFin)+', en total por todos los pasajeros.');
+  formasPago.push('Saldo: hasta 30 días antes de la salida.');
+  formasPago.push('Posibilidad de pagos parciales.');
+
+  // Imagen del vuelo en base64
+  var imgTag=aereoImgData?'<img src="'+aereoImgData+'" style="max-width:100%;margin-top:20px">':'(No se adjuntó imagen del itinerario de vuelo)';
+
+  // Armar el prompt
+  var prompt=`Sos el diseñador de cotizaciones de Nomádica Viajes. Tu tarea es tomar los datos de un viaje y devolver una cotización en HTML usando EXACTAMENTE la plantilla adjunta.
+
+REGLAS:
+1. Usá el HTML de la plantilla como molde EXACTO. No cambies estructura, estilos, fuentes, colores, tamaños ni clases. Solo reemplazás el contenido de texto.
+2. Reemplazá únicamente lo marcado con <!-- VARIABLE: ... -->:
+   - Portada: destino, bajada/régimen, mes/año, fechas, estadía, precio "desde" y etiqueta (por persona o por grupo familiar).
+   - Pág 2 "Incluye": filas de servicios incluidos.
+   - Pág 2 "Vuelos": aerolínea + en lugar de la tabla de tramos, insertá esta imagen del itinerario: ${imgTag}
+   - Pág 3 "Alojamiento": filas de hoteles con precio efectivo y transferencia. La leyenda "por persona" o "por grupo familiar" según corresponda.
+   - Pág 3: formas de pago y opcionales.
+3. Si hay MÁS o MENOS filas que en el ejemplo, duplicá o eliminá filas copiando el mismo formato HTML. No inventes campos nuevos ni cambies el diseño.
+4. Mantené el tono Nomádica: claro, cálido, sin relleno. Números en formato USD 1.801 (punto de miles).
+5. Devolvé el HTML COMPLETO y listo para abrir en el navegador e imprimir a PDF. No agregues explicaciones fuera del HTML.
+
+DATOS DE LA COTIZACIÓN:
+- Destino: ${destino}
+- Bajada portada: ${bajadaPortada}
+- Mes/año: ${mesAnio}
+- Fechas: ${fechasCortas}
+- Estadía: ${noches} noches
+- Pasajeros: ${paxStr}
+- Precio desde: ${mon} ${fmt(precioDesde)} (${lblPrecio})
+- Vendedor: ${vendedor}
+
+SERVICIOS INCLUIDOS:
+${serviciosIncluidos.map(function(s){return '- '+s.nombre+(s.detalle?' · '+s.detalle:'');}).join('\n')}
+
+HOTELES (${tipoTarifa==='persona'?'precio por persona':'precio por grupo familiar'}):
+${hotelesData.map(function(h,i){return (i+1)+'. '+h.nombre+(h.categoria?' · '+h.categoria:'')+(h.regimen?' · '+h.regimen:'')+' → Efectivo: '+mon+' '+h.efectivo+' / Transferencia: '+mon+' '+h.transferencia;}).join('\n')}
+
+FORMAS DE PAGO:
+${formasPago.join('\n')}
+
+OPCIONALES:
+- Excursiones y actividades locales
+- Traslados privados adicionales
+- Upgrade de habitación
+- Asistencia al viajero con cobertura médica internacional
+
+PLANTILLA HTML:
+${PLANTILLA_HTML}`;
+
+  // Mostrar loading
+  var loadWin=window.open('','_blank');
+  loadWin.document.write('<html><body style="font-family:Arial;display:flex;align-items:center;justify-content:center;height:100vh;background:#f5f0e8"><div style="text-align:center"><div style="font-size:48px">✈</div><p style="font-size:18px;color:#374d57;margin-top:16px">Generando cotización...</p></div></body></html>');
+
+  try{
+    var resp=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-6',
+        max_tokens:8000,
+        messages:[{role:'user',content:prompt}]
+      })
+    });
+    var data=await resp.json();
+    var htmlResult=data.content&&data.content[0]&&data.content[0].text||'';
+    // Limpiar posibles backticks
+    htmlResult=htmlResult.replace(/^```html\s*/i,'').replace(/```\s*$/,'').trim();
+    loadWin.document.open();
+    loadWin.document.write(htmlResult);
+    loadWin.document.close();
+  }catch(err){
+    loadWin.document.open();
+    loadWin.document.write('<html><body style="font-family:Arial;padding:40px"><h2 style="color:#c33">Error al generar la cotización</h2><p>'+err.message+'</p></body></html>');
+    loadWin.document.close();
+  }
+}
+
+// Plantilla HTML embebida en el DOM
+var PLANTILLA_HTML=document.getElementById('plantillaNMD').innerHTML;
+
   recalc();
   var C=window._C;if(!C){alert('Completa los datos primero.');return;}
   var tipoTarifa=document.querySelector('input[name="tipoTarifa"]:checked').value;
