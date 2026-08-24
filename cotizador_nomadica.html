@@ -739,7 +739,7 @@ function generarWA(){
 function closeWA(){$('waModal').classList.remove('open');}
 function copyWA(){$('waText').select();document.execCommand('copy');$('copyBtn').textContent='Copiado!';setTimeout(function(){$('copyBtn').textContent='Copiar texto';},2000);}
 
-async function generarHTML(){
+function generarHTML(){
   recalc();
   var C=window._C;if(!C){alert('Completá los datos primero.');return;}
   var tipoTarifa=document.querySelector('input[name="tipoTarifa"]:checked').value;
