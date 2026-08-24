@@ -882,30 +882,6 @@ ${PLANTILLA_HTML}`;
   var loadWin=window.open('','_blank');
   loadWin.document.write('<html><body style="font-family:Arial;display:flex;align-items:center;justify-content:center;height:100vh;background:#f5f0e8"><div style="text-align:center"><div style="font-size:48px">✈</div><p style="font-size:18px;color:#374d57;margin-top:16px">Generando cotización...</p></div></body></html>');
 
-  try{
-    var resp=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        model:'claude-sonnet-4-6',
-        max_tokens:8000,
-        messages:[{role:'user',content:prompt}]
-      })
-    });
-    var data=await resp.json();
-    var htmlResult=data.content&&data.content[0]&&data.content[0].text||'';
-    // Limpiar posibles backticks
-    htmlResult=htmlResult.replace(/^```html\s*/i,'').replace(/```\s*$/,'').trim();
-    loadWin.document.open();
-    loadWin.document.write(htmlResult);
-    loadWin.document.close();
-  }catch(err){
-    loadWin.document.open();
-    loadWin.document.write('<html><body style="font-family:Arial;padding:40px"><h2 style="color:#c33">Error al generar la cotización</h2><p>'+err.message+'</p></body></html>');
-    loadWin.document.close();
-  }
-}
-
 // Plantilla HTML embebida en el DOM
 var PLANTILLA_HTML=document.getElementById('plantillaNMD').innerHTML;
 
