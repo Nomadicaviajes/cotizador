@@ -225,7 +225,7 @@ input[readonly]{background:#f0ebe2;color:#555}
           <label style="font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:3px"><input type="radio" name="tipoTarifa" value="persona"> Por persona</label>
         </div>
         <button class="btn btn-green" onclick="generarWA()">WhatsApp</button>
-        <button class="btn btn-accent" onclick="generarPDF()">Descargar PDF</button>
+        <button class="btn btn-accent" onclick="generarHTML()">&#128196; HTML / PDF</button>
       </div>
     </div>
     <div id="resumenContent"></div>
@@ -263,6 +263,7 @@ function comOpts(def){var s='';for(var i=10;i<=20;i++)s+='<option value="'+i+'"'
 
 // LOGIN
 var PASS='nomadica2025';
+(function(){var p=new URLSearchParams(location.search).get('auth');if(p===PASS){$('loginOverlay').style.display='none';}})();
 $('loginBtn').onclick=function(){checkLogin();};
 $('loginInput').onkeydown=function(e){if(e.key==='Enter')checkLogin();};
 function checkLogin(){
@@ -738,151 +739,235 @@ function generarWA(){
 function closeWA(){$('waModal').classList.remove('open');}
 function copyWA(){$('waText').select();document.execCommand('copy');$('copyBtn').textContent='Copiado!';setTimeout(function(){$('copyBtn').textContent='Copiar texto';},2000);}
 
-function generarPDF(){
+function generarHTML(){
   recalc();
-  var C=window._C;if(!C){alert('Completa los datos primero.');return;}
+  var C=window._C;if(!C){alert('Completá los datos primero.');return;}
   var tipoTarifa=document.querySelector('input[name="tipoTarifa"]:checked').value;
-  var mon=C.mon,cliente=$('cliente').value||'—',destino=$('destino').value||'—';
-  var vendedor=$('vendedor').value||'',fs=$('fechaSalida').value||'—',fr=$('fechaRegreso').value||'—',noches=$('noches').value||0;
-  var parts=[];
-  if(C.adultos)parts.push(C.adultos+' adulto'+(C.adultos!==1?'s':''));
-  if(C.ninos)parts.push(C.ninos+' niño'+(C.ninos!==1?'s':''));
-  if(C.infantes)parts.push(C.infantes+' infante'+(C.infantes!==1?'s':''));
-  var colTarifa=tipoTarifa==='persona'?'Precio final de todo el paquete por persona':'Precio final por grupo familiar';
-  var svcList='';
-  if($('chkAereo').checked){aereos.forEach(function(aid){var aer=$('aAer'+aid)&&$('aAer'+aid).value||'',det=$('aDet'+aid)&&$('aDet'+aid).value;svcList+='<li><strong>Vuelo</strong> con '+aer+(det?'<em style="font-size:11px;color:#888"> · '+det+'</em>':'')+'</li>';});}
-  traslados.forEach(function(tid){var tipo=$('tTipo'+tid)&&$('tTipo'+tid).value,det=$('tDet'+tid)&&$('tDet'+tid).value||'';svcList+='<li>Traslado <strong>'+tipo+'</strong>'+(det?'<em style="font-size:11px;color:#888"> · '+det+'</em>':'')+'</li>';});
-  if(noches)svcList+='<li><strong>'+noches+' noches</strong> de alojamiento</li>';
-  if($('chkAsist').checked){var emp=$('asistEmpresa');svcList+='<li>Asistencia al viajero <strong>'+emp.options[emp.selectedIndex].text.split('(')[0].trim()+'</strong></li>';}
-  servicios.forEach(function(sid){svcList+='<li>'+($('sDesc'+sid)&&$('sDesc'+sid).value||$('sTipo'+sid)&&$('sTipo'+sid).value)+'</li>';});
-  svcList+='<li>Soporte y guardia <strong>24hs</strong> ante cambios o reprogramaciones</li>';
-  svcList+='<li><strong>Nomadica App:</strong> todo el viaje en un solo lugar</li>';
-  var hotelRows='';
-  if(modo==='simple'&&hoteles.length>0){
-    hoteles.forEach(function(h){
-      var id=h.id,nom=$('hNom'+id)&&$('hNom'+id).value||'Hotel',reg=$('hReg'+id)&&$('hReg'+id).value||'';
-      var cat=$('hCat'+id)&&$('hCat'+id).value||'',link=$('hLink'+id)&&$('hLink'+id).value||'';
-      var t=totalConHoteles([id]);
-      var ef=tipoTarifa==='persona'?t.pp:t.tot,tr=tipoTarifa==='persona'?t.ppT:t.totT;
-      hotelRows+='<tr><td>'+nom+(cat?'<br><em style="font-size:10px;color:#888">'+cat+'</em>':'')+(link?'<br><a href="'+link+'" style="font-size:9px;color:#c8881a;text-decoration:underline;word-break:break-all" target="_blank">'+link+'</a>':'')+'</td><td>'+reg+'</td><td style="text-align:right">'+mon+' '+fmt(ef)+'</td><td style="text-align:right">'+mon+' '+fmt(tr)+'</td></tr>';
-    });
-  } else if(modo==='combo'){
-    var combos=getCombinaciones();
-    if(combos&&combos.length>0){
-      combos.forEach(function(hids,idx){
-        var t=totalConHoteles(hids);
-        var ef=tipoTarifa==='persona'?t.pp:t.tot,tr=tipoTarifa==='persona'?t.ppT:t.totT;
-        var label=hids.map(function(hid,di){var dnom=$('dNom'+destinos[di].id)&&$('dNom'+destinos[di].id).value||'Destino';var nom=$('hNom'+hid)&&$('hNom'+hid).value||'Hotel';var cat=$('hCat'+hid)&&$('hCat'+hid).value||'';return dnom+': '+nom+(cat?' ('+cat+')':'');}).join('<br>');
-        hotelRows+='<tr><td>#'+(idx+1)+'<br><em style="font-size:10px;color:#888">'+label+'</em></td><td style="text-align:right">'+mon+' '+fmt(ef)+'</td><td style="text-align:right">'+mon+' '+fmt(tr)+'</td></tr>';
-      });
-    }
-  }
-  var hotelSection='';
-  if(hotelRows){
-    if(modo==='simple'){
-      hotelSection='<div class="section"><div class="section-title">Opciones de alojamiento</div>'
-        +'<table><thead><tr><th style="width:38%">Hotel</th><th style="width:20%">Régimen</th><th style="width:21%;text-align:right">Efectivo</th><th style="width:21%;text-align:right">Transferencia</th></tr></thead>'
-        +'<tbody>'+hotelRows+'</tbody></table>'
-        +'<p style="font-size:10px;color:#aaa;margin-top:5px">'+colTarifa+' · Transferencia: efectivo + 1.5%</p></div>';
-    } else {
-      hotelSection='<div class="section"><div class="section-title">Combinaciones de alojamiento</div>'
-        +'<table><thead><tr><th>Combinación</th><th style="text-align:right">Efectivo</th><th style="text-align:right">Transferencia</th></tr></thead>'
-        +'<tbody>'+hotelRows+'</tbody></table>'
-        +'<p style="font-size:10px;color:#aaa;margin-top:5px">'+colTarifa+' · Transferencia: efectivo + 1.5%</p></div>';
-    }
-  }
-  var aerImg=aereoImgData?'<div style="margin:14px 0"><img src="'+aereoImgData+'" style="max-width:100%;border-radius:6px;border:1px solid #e0d8cc"></div>':'';
-  var descHTML=C.desc>0?'<div style="background:#fff5f5;border:1px solid #fcc;border-radius:6px;padding:8px 14px;margin:10px 0;font-size:12px;color:#c33"><strong>Descuento: '+($('descDetalle').value||'Descuento')+'</strong> — '+mon+' '+fmt(C.desc)+'</div>':'';
-  var pagoHTML=C.aerFin>0
-    ?'<ul><li><strong>Seña:</strong> para garantizar la reserva (precio de los vuelos) – '+mon+' '+fmt(C.aerFin)+', en total por todos los pasajeros</li><li><strong>Saldo:</strong> hasta 30 días antes de la salida</li><li>Posibilidad de pagos parciales</li></ul>'
-    :'<ul><li><strong>Saldo:</strong> hasta 30 días antes de la salida</li><li>Posibilidad de pagos parciales</li></ul>';
+  var mon=C.mon;
+  var destino=($('destino').value||'Destino').trim();
+  var cliente=$('cliente').value||'';
+  var vendedor=$('vendedor').value||'';
+  var fs=$('fechaSalida').value||'';
+  var fr=$('fechaRegreso').value||'';
+  var noches=$('noches').value||0;
 
-  var pdfHTML='<!DOCTYPE html><html><head><meta charset="UTF-8">'
-    +'<title>Cotización Nomádica – '+cliente+' – '+destino+'</title>'
+  var MESES_L=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  var MESES_S=['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DIC'];
+  var now=new Date();
+  var mesAnio=MESES_L[now.getMonth()]+' '+now.getFullYear();
+
+  function dayNum(v){if(!v)return'';var p=v.split('-');return parseInt(p[2]);}
+  function dayMes(v){if(!v)return'';var p=v.split('-');return MESES_S[parseInt(p[1])-1];}
+  function fechaRango(){
+    if(!fs&&!fr)return'—';
+    if(fs&&fr&&dayMes(fs)===dayMes(fr))return dayNum(fs)+'–'+dayNum(fr)+' '+dayMes(fr);
+    if(fs&&fr)return dayNum(fs)+' '+dayMes(fs)+' – '+dayNum(fr)+' '+dayMes(fr);
+    return dayNum(fs)+' '+dayMes(fs);
+  }
+
+  // Régimen portada
+  var regs=hoteles.map(function(h){return ($('hReg'+h.id)&&$('hReg'+h.id).value||'').toLowerCase();});
+  var todosAI=regs.length>0&&regs.every(function(r){return r.indexOf('all inclusive')!==-1||r.indexOf('all-inclusive')!==-1;});
+  var regPortada=todosAI?($('hReg'+hoteles[0].id)&&$('hReg'+hoteles[0].id).value||''):'';
+  var bajada=regPortada||'';
+
+  // Precio desde
+  var precioDesde=null;
+  if(modo==='simple'&&hoteles.length>0){
+    hoteles.forEach(function(h){var t=totalConHoteles([h.id]);var p=tipoTarifa==='persona'?t.pp:t.tot;if(precioDesde===null||p<precioDesde)precioDesde=p;});
+  } else if(modo==='combo'){
+    var combosP=getCombinaciones();
+    if(combosP)combosP.forEach(function(hids){var t=totalConHoteles(hids);var p=tipoTarifa==='persona'?t.pp:t.tot;if(precioDesde===null||p<precioDesde)precioDesde=p;});
+  }
+  var tarifaLbl=tipoTarifa==='persona'?'por persona':'por grupo familiar';
+
+  // Servicios incluidos
+  var incluyeRows='';
+  function incluyeFila(nombre,detalle,last){
+    return '<div style="background-color:#F4ECDB;display:flex;justify-content:space-between;align-items:baseline;padding:30px 0;border-top:1.5px solid #c9bfaa'+(last?';border-bottom:1.5px solid #c9bfaa':'')+'">'
+      +'<span style="font-family:\'Bodoni Moda\',serif;font-size:40px;color:#22201B">'+nombre+'</span>'
+      +'<span style="font-family:\'Courier Prime\',monospace;font-size:24px;color:#8a8170">'+detalle+'</span>'
+      +'</div>';
+  }
+  var incItems=[];
+  if($('chkAereo').checked){
+    aereos.forEach(function(aid){
+      var aer=$('aAer'+aid)&&$('aAer'+aid).value||'Vuelo';
+      var det=$('aDet'+aid)&&$('aDet'+aid).value||'Carry on incluido';
+      incItems.push({n:'Vuelo '+aer,d:det});
+    });
+  }
+  traslados.forEach(function(tid){
+    var tipo=$('tTipo'+tid)&&$('tTipo'+tid).value||'';
+    var det=$('tDet'+tid)&&$('tDet'+tid).value||'Aeropuerto · Hotel';
+    incItems.push({n:'Traslado '+tipo,d:det});
+  });
+  if(noches)incItems.push({n:'Alojamiento',d:noches+' noches'+(regPortada?' · '+regPortada:'')});
+  if($('chkAsist').checked){var emp=$('asistEmpresa');incItems.push({n:'Asistencia al viajero',d:emp.options[emp.selectedIndex].text.split('(')[0].trim()});}
+  servicios.forEach(function(sid){var desc=$('sDesc'+sid)&&$('sDesc'+sid).value||$('sTipo'+sid)&&$('sTipo'+sid).value||'';if(desc)incItems.push({n:desc,d:''}); });
+  incItems.push({n:'Soporte y guardia',d:'24 horas'});
+  incItems.push({n:'Nomadica App',d:'todo el viaje en un solo lugar'});
+  incItems.forEach(function(item,i){incluyeRows+=incluyeFila(item.n,item.d,i===incItems.length-1);});
+
+  // Vuelos
+  var vuelosSection='';
+  if($('chkAereo').checked&&aereos.length>0){
+    var aer0=$('aAer'+aereos[0])&&$('aAer'+aereos[0]).value||'';
+    var detContent='';
+    if(aereoImgData){
+      detContent='<div style="padding:24px 38px"><img src="'+aereoImgData+'" style="max-width:100%;border-radius:4px"></div>';
+    } else {
+      aereos.forEach(function(aid){
+        var det=$('aDet'+aid)&&$('aDet'+aid).value||'';
+        if(det)detContent+='<div style="padding:20px 38px;font-size:28px;border-bottom:1px solid rgba(34,32,27,.1);white-space:pre-line">'+det+'</div>';
+      });
+      if(!detContent)detContent='<div style="padding:24px 38px;font-size:24px;color:#8a8170;font-style:italic">Ver itinerario adjunto.</div>';
+    }
+    vuelosSection='<div style="display:flex;align-items:baseline;gap:30px;margin-top:60px">'
+      +'<div style="font-family:\'Bodoni Moda\',serif;font-size:130px;font-weight:600;color:#2B484E;line-height:.8">02</div>'
+      +'<div style="font-family:\'Bodoni Moda\',serif;font-style:italic;font-size:72px;color:#22201B">Vuelos</div>'
+      +(aer0?'<div style="font-family:\'Courier Prime\',monospace;font-size:22px;color:#8a8170;letter-spacing:2px;text-transform:uppercase;align-self:center;margin-left:auto">'+aer0+'</div>':'')
+      +'</div>'
+      +'<div style="margin-top:38px;border:1.5px solid rgba(43,72,78,.3);background:rgba(255,255,255,.5)">'+detContent+'</div>';
+  }
+
+  // Alojamiento rows
+  var alojNum=($('chkAereo').checked&&aereos.length>0)?'03':'02';
+  var alojRows='';
+  if(modo==='simple'){
+    hoteles.forEach(function(h,idx){
+      var id=h.id;
+      var nom=$('hNom'+id)&&$('hNom'+id).value||'Hotel';
+      var reg=$('hReg'+id)&&$('hReg'+id).value||'';
+      var cat=$('hCat'+id)&&$('hCat'+id).value||'';
+      var t=totalConHoteles([id]);
+      var ef=tipoTarifa==='persona'?t.pp:t.tot;
+      var tr=tipoTarifa==='persona'?t.ppT:t.totT;
+      var borderB=idx<hoteles.length-1?';border-bottom:1.5px solid #c9bfaa':'';
+      alojRows+='<div style="background-color:#F4ECDB;display:flex;align-items:flex-end;padding:28px 0;border-top:1.5px solid #c9bfaa'+borderB+'">'
+        +'<div style="flex:1.5"><div style="font-family:\'Bodoni Moda\',serif;font-size:42px;color:#22201B">'+nom+'</div>'
+        +((cat||reg)?'<div style="font-family:\'Courier Prime\',monospace;font-size:19px;text-transform:uppercase;letter-spacing:2px;color:#8a8170;margin-top:6px">'+(cat?cat+(reg?' · ':'')+reg:reg)+'</div>':'')
+        +'</div>'
+        +'<div style="flex:1;text-align:right"><div style="font-family:\'Bodoni Moda\',serif;font-size:48px;font-weight:600;color:#22201B">'+mon+' '+fmt(ef)+'</div>'
+        +'<div style="font-size:23px;color:#8a8170">transf. '+mon+' '+fmt(tr)+'</div></div>'
+        +'</div>';
+    });
+  } else {
+    var combosH=getCombinaciones();
+    if(combosH)combosH.forEach(function(hids,idx){
+      var t=totalConHoteles(hids);
+      var ef=tipoTarifa==='persona'?t.pp:t.tot;
+      var tr=tipoTarifa==='persona'?t.ppT:t.totT;
+      var lbl=hids.map(function(hid,di){
+        var dnom=$('dNom'+destinos[di].id)&&$('dNom'+destinos[di].id).value||'Destino';
+        return dnom+': '+($('hNom'+hid)&&$('hNom'+hid).value||'Hotel');
+      }).join(' + ');
+      alojRows+='<div style="background-color:#F4ECDB;display:flex;align-items:flex-end;padding:28px 0;border-top:1.5px solid #c9bfaa">'
+        +'<div style="flex:1.5"><div style="font-family:\'Bodoni Moda\',serif;font-size:42px;color:#22201B">Combinación #'+(idx+1)+'</div>'
+        +'<div style="font-family:\'Courier Prime\',monospace;font-size:19px;text-transform:uppercase;letter-spacing:2px;color:#8a8170;margin-top:6px">'+lbl+'</div></div>'
+        +'<div style="flex:1;text-align:right"><div style="font-family:\'Bodoni Moda\',serif;font-size:48px;font-weight:600;color:#22201B">'+mon+' '+fmt(ef)+'</div>'
+        +'<div style="font-size:23px;color:#8a8170">transf. '+mon+' '+fmt(tr)+'</div></div>'
+        +'</div>';
+    });
+  }
+
+  // Pago
+  var pagoItems='';
+  if(C.aerFin>0)pagoItems+='<div style="margin-bottom:12px"><b>Seña:</b> '+mon+' '+fmt(C.aerFin)+' (vuelos) por todos los pasajeros.</div>';
+  pagoItems+='<div style="margin-bottom:12px"><b>Saldo:</b> hasta 30 días antes de la salida.</div><div>Posibilidad de pagos parciales.</div>';
+
+  // Opcionales
+  var opcionalesItems='';
+  if(!$('chkAsist').checked)opcionalesItems+='<div>Asistencia al viajero</div>';
+  opcionalesItems+='<div>Excursiones locales</div><div>Traslados privados</div><div>Upgrade de habitación</div>';
+
+  // Disclaimer
+  var disc='Tarifas en '+mon+' billete, depósito o transferencia · Sujetas a confirmación de disponibilidad · No reembolsables ante cancelación'+($('chkAereo').checked?' · Carry on en cabina, sin selección de asientos.':'.');
+
+  // Destino font size adaptativo
+  var destFontSize=destino.length<=6?184:destino.length<=9?140:destino.length<=13?110:80;
+
+  var html='<!DOCTYPE html><html lang="es"><head>'
+    +'<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'
+    +'<title>Cotización Nomádica — '+destino+'</title>'
     +'<link rel="preconnect" href="https://fonts.googleapis.com">'
-    +'<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">'
-    +'<style>'
-    +'*{box-sizing:border-box;margin:0;padding:0}'
-    +'body{font-family:"Montserrat",Arial,sans-serif;color:#333;background:#fff;font-size:12px;line-height:1.6}'
-    +'.page{max-width:800px;margin:0 auto}'
-    +'.pdf-header{background:#374d57;padding:20px 32px;display:flex;justify-content:space-between;align-items:center}'
-    +'.pdf-header img{height:48px;object-fit:contain}'
-    +'.pdf-header-right{text-align:right;color:rgba(255,255,255,.75);font-size:10px;line-height:1.8}'
-    +'.pdf-header-right strong{color:#fff;font-size:11px;display:block}'
-    +'.gold-line{height:3px;background:linear-gradient(90deg,#c8881a,#e8b86d,#c8881a)}'
-    +'.hero-bar{background:#f5f0e8;padding:18px 32px;border-bottom:2px solid #e0d8cc}'
-    +'.hero-title{font-family:"Cormorant Garamond",Georgia,serif;font-size:24px;font-weight:700;color:#374d57;margin-bottom:6px}'
-    +'.hero-meta{font-size:11px;color:#666;display:flex;gap:18px;flex-wrap:wrap}'
-    +'.hero-meta strong{color:#374d57}'
-    +'.pdf-body{padding:22px 32px}'
-    +'.section{margin-bottom:20px}'
-    +'.section-title{font-family:"Cormorant Garamond",Georgia,serif;font-size:16px;font-weight:700;color:#374d57;border-bottom:1.5px solid #c8881a;padding-bottom:4px;margin-bottom:10px}'
-    +'ul{padding-left:18px}ul li{font-size:12px;color:#444;line-height:2}'
-    +'table{width:100%;border-collapse:collapse;font-size:11px;table-layout:fixed}'
-    +'thead tr{background:#374d57;color:#fff}'
-    +'th{padding:8px 10px;text-align:left;font-size:10px;font-weight:600;letter-spacing:.4px;text-transform:uppercase}'
-    +'tbody tr{border-bottom:1px solid #ede8e0}'
-    +'tbody tr:nth-child(even){background:#faf8f4}'
-    +'td{padding:8px 10px;color:#444;vertical-align:top}'
-    +'.payment-box{background:#f5f0e8;border-left:3px solid #c8881a;padding:12px 16px;border-radius:0 6px 6px 0}'
-    +'.payment-box li{font-size:12px;line-height:2.1}'
-    +'.club-box{background:#374d57;border-radius:8px;padding:16px 20px;color:#fff;margin-bottom:14px}'
-    +'.club-title{font-family:"Cormorant Garamond",Georgia,serif;font-size:17px;font-weight:700;color:#fff;margin-bottom:5px}'
-    +'.club-box p{font-size:11px;color:rgba(255,255,255,.8);line-height:1.7}'
-    +'.club-box a{color:#c8881a;font-size:11px}'
-    +'.club-highlight{color:#c8881a;font-weight:700}'
-    +'.info-box{background:#faf8f4;border:1px solid #e0d8cc;border-radius:8px;padding:14px 18px}'
-    +'.info-title{font-size:10px;font-weight:700;color:#c8881a;text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px}'
-    +'.info-box li{font-size:11px;color:#666;line-height:1.9}'
-    +'.opc-box{background:#fff;border:1px solid #e0d8cc;border-radius:8px;padding:14px 18px}'
-    +'.pdf-footer{background:#374d57;padding:14px 32px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;margin-top:22px}'
-    +'.footer-left{color:rgba(255,255,255,.75);font-size:10px;line-height:1.9}'
-    +'.footer-left strong{color:#fff}'
-    +'.footer-right{color:rgba(255,255,255,.45);font-size:9px;text-align:right}'
-    +'@media print{body{padding:0}.page{max-width:100%}}'
+    +'<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
+    +'<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;0,6..96,600;0,6..96,700;1,6..96,400;1,6..96,500;1,6..96,600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Hanken+Grotesk:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">'
+    +'<style>*{box-sizing:border-box;margin:0;padding:0;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}body{background:#d8d4cc;font-family:\'Hanken Grotesk\',sans-serif}'
+    +'.page{width:1080px;height:1920px;margin:0 auto 36px;position:relative;overflow:hidden;box-shadow:0 12px 44px rgba(0,0,0,.18)}'
+    +'@media print{@page{size:1080px 1920px;margin:0}body{background:#fff}.page{margin:0;box-shadow:none;break-after:page}.page:last-child{break-after:auto}}'
     +'</style></head><body>'
-    +'<div class="page">'
-    +'<div class="pdf-header">'
-    +'<img src="https://raw.githubusercontent.com/Nomadicaviajes/cotizador/main/5.%20fondo%20para%20voucher.png" alt="Nomádica" onerror="this.style.display=\'none\'">'
-    +'<div class="pdf-header-right"><strong>'+(vendedor||'Nomádica Viajes')+'</strong>nomadicaviajes.com.ar<br>@nomadicaviajes</div>'
+
+    // PAGE 1 · PORTADA
+    +'<div class="page" style="-webkit-print-color-adjust:exact;print-color-adjust:exact;background-color:#1E3539;color:#EFE3CC;font-family:\'Hanken Grotesk\',sans-serif">'
+    +'<div style="-webkit-print-color-adjust:exact;print-color-adjust:exact;position:absolute;inset:0;background-color:#1E3539"></div>'
+    +'<div style="position:absolute;inset:46px;border:1.5px solid rgba(216,161,43,.55);pointer-events:none"></div>'
+    +'<div style="position:relative;padding:96px;height:100%;display:flex;flex-direction:column;text-align:center;align-items:center">'
+    +'<div style="font-family:\'Courier Prime\',monospace;font-size:28px;letter-spacing:9px;text-transform:uppercase;color:#D8A12B;white-space:nowrap">Nomádica Viajes</div>'
+    +'<div style="font-family:\'Courier Prime\',monospace;font-size:30px;letter-spacing:4px;text-transform:uppercase;color:rgba(239,227,204,.6);margin-top:22px;white-space:nowrap">Cotización · '+mesAnio+'</div>'
+    +'<div style="flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center">'
+    +'<div style="font-family:\'Courier Prime\',monospace;font-size:22px;letter-spacing:6px;text-transform:uppercase;color:rgba(239,227,204,.7)">El viaje</div>'
+    +'<div style="font-family:\'Bodoni Moda\',serif;font-style:italic;font-weight:500;font-size:'+destFontSize+'px;line-height:.88;letter-spacing:-3px;color:#EFE3CC;margin:10px 0 6px">'+destino+'</div>'
+    +'<div style="width:120px;height:1.5px;background:#D8A12B;margin:30px 0"></div>'
+    +(bajada?'<div style="font-family:\'Cormorant Garamond\',serif;font-style:italic;font-size:46px;color:rgba(239,227,204,.85)">'+bajada+'</div>':'')
     +'</div>'
-    +'<div class="gold-line"></div>'
-    +'<div class="hero-bar">'
-    +'<div class="hero-title">'+destino+(modo==='combo'?' · Viaje Combinado':'')+'</div>'
-    +'<div class="hero-meta"><span>📅 <strong>'+fs+'</strong> al <strong>'+fr+'</strong></span><span>🌙 <strong>'+noches+' noches</strong></span><span>👥 <strong>'+parts.join(' + ')+'</strong></span></div>'
+    +'<div style="display:flex;gap:78px;font-family:\'Courier Prime\',monospace;color:rgba(239,227,204,.85);margin-bottom:26px;align-items:stretch">'
+    +'<div><div style="font-size:32px;letter-spacing:4px;text-transform:uppercase;color:#D8A12B">Fechas</div><div style="font-family:\'Bodoni Moda\',serif;font-size:38px;margin-top:12px;color:#EFE3CC">'+fechaRango()+'</div></div>'
+    +'<div style="width:1px;background:rgba(216,161,43,.4)"></div>'
+    +'<div><div style="font-size:32px;letter-spacing:4px;text-transform:uppercase;color:#D8A12B">Estadía</div><div style="font-family:\'Bodoni Moda\',serif;font-size:38px;margin-top:12px;color:#EFE3CC">'+noches+' noches</div></div>'
+    +'<div style="width:1px;background:rgba(216,161,43,.4)"></div>'
+    +'<div><div style="font-size:32px;letter-spacing:4px;text-transform:uppercase;color:#D8A12B">Desde</div><div style="font-family:\'Bodoni Moda\',serif;font-size:38px;margin-top:12px;color:#EFE3CC">'+(precioDesde!==null?mon+' '+fmt(precioDesde):'—')+'</div></div>'
     +'</div>'
-    +'<div class="pdf-body">'
-    +'<div class="section"><div class="section-title">Servicios incluidos</div><ul>'+svcList+'</ul>'+aerImg+'</div>'
-    +hotelSection
-    +descHTML
-    +'<div class="section"><div class="section-title">Formas de pago</div><div class="payment-box"><ul>'+pagoHTML.replace('<ul>','').replace('</ul>','')+'</ul></div></div>'
-    +'<div class="section"><div class="section-title">Servicios opcionales</div><div class="opc-box"><ul>'
-    +'<li>Excursiones y actividades locales</li><li>Traslados privados adicionales</li>'
-    +'<li>Upgrade de habitación</li><li>Asistencia al viajero con cobertura médica internacional</li>'
-    +'</ul></div></div>'
-    +'<div class="club-box"><div class="club-title">⭐ Nomadic Club</div>'
-    +'<p>Cada paquete suma puntos que podés canjear por descuentos, regalos y experiencias exclusivas.<br>'
-    +'<span class="club-highlight">1 punto = 1 '+mon+'</span> en compras dentro de Nomádica.</p>'
-    +'<a href="https://nomadicaviajes.com.ar/espanol/landing/8/Nomadic-Club/">nomadicaviajes.com.ar/nomadic-club</a></div>'
-    +'<div class="info-box"><div class="info-title">Información adicional</div><ul>'
-    +'<li>Tarifas para abonar con '+mon+' billete, depósito o transferencia.</li>'
-    +'<li>Tarifas sujetas a confirmación de disponibilidad al momento de reservar.</li>'
-    +'<li>Tarifas no reembolsables en caso de cancelación.</li>'
-    +($('chkAereo').checked?'<li>Los vuelos incluyen equipaje tipo carry on en cabina. No incluye selección anticipada de asientos.</li>':'')
-    +'</ul></div>'
+    +'</div></div>'
+
+    // PAGE 2 · INCLUYE + VUELOS
+    +'<div class="page" style="-webkit-print-color-adjust:exact;print-color-adjust:exact;background-color:#F4ECDB;color:#22201B;font-family:\'Hanken Grotesk\',sans-serif">'
+    +'<div style="padding:90px 88px;height:100%;display:flex;flex-direction:column">'
+    +'<div style="display:flex;justify-content:space-between;align-items:baseline;font-family:\'Courier Prime\',monospace;font-size:20px;letter-spacing:4px;text-transform:uppercase;color:#8a8170"><span>'+destino+'</span><span>Nomádica · 02</span></div>'
+    +'<div style="display:flex;align-items:baseline;gap:30px;margin-top:70px">'
+    +'<div style="font-family:\'Bodoni Moda\',serif;font-size:130px;font-weight:600;color:#2B484E;line-height:.8">01</div>'
+    +'<div style="font-family:\'Bodoni Moda\',serif;font-style:italic;font-size:72px;color:#22201B">Incluye</div>'
     +'</div>'
-    +'<div class="gold-line"></div>'
-    +'<div class="pdf-footer">'
-    +'<div class="footer-left"><strong>Nomádica Viajes</strong><br>La Fábrica CO-working · Cofico, Córdoba, Argentina<br>instagram.com/nomadicaviajes · nomadicaviajes.com.ar</div>'
-    +'<div class="footer-right">Legajo 19126</div>'
+    +'<div style="margin-top:46px;display:flex;flex-direction:column">'+incluyeRows+'</div>'
+    +vuelosSection
+    +'<div style="flex:1"></div>'
+    +'<div style="text-align:center;font-family:\'Cormorant Garamond\',serif;font-style:italic;font-size:34px;color:#8a8170">Nomádica Viajes — Dónde empieza tu aventura</div>'
+    +'</div></div>'
+
+    // PAGE 3 · ALOJAMIENTO + PAGO + CLUB
+    +'<div class="page" style="-webkit-print-color-adjust:exact;print-color-adjust:exact;background-color:#F4ECDB;color:#22201B;font-family:\'Hanken Grotesk\',sans-serif">'
+    +'<div style="padding:90px 88px 0;height:100%;display:flex;flex-direction:column">'
+    +'<div style="display:flex;justify-content:space-between;align-items:baseline;font-family:\'Courier Prime\',monospace;font-size:20px;letter-spacing:4px;text-transform:uppercase;color:#8a8170"><span>'+destino+'</span><span>Nomádica · 03</span></div>'
+    +'<div style="display:flex;align-items:baseline;gap:30px;margin-top:60px">'
+    +'<div style="font-family:\'Bodoni Moda\',serif;font-size:120px;font-weight:600;color:#2B484E;line-height:.8">'+alojNum+'</div>'
+    +'<div style="font-family:\'Bodoni Moda\',serif;font-style:italic;font-size:66px;color:#22201B">Alojamiento</div>'
+    +'<div style="font-family:\'Courier Prime\',monospace;font-size:20px;color:#8a8170;letter-spacing:2px;text-transform:uppercase;align-self:center;margin-left:auto">'+tarifaLbl+'</div>'
     +'</div>'
+    +(alojRows?'<div style="margin-top:38px">'+alojRows+'</div>':'')
+    +'<div style="font-family:\'Courier Prime\',monospace;font-size:19px;color:#8a8170;margin-top:12px">Precio final del paquete '+(tipoTarifa==='persona'?'por persona':'por grupo familiar')+'</div>'
+    +'<div style="display:flex;gap:56px;margin-top:50px">'
+    +'<div style="flex:1"><div style="font-family:\'Courier Prime\',monospace;font-size:20px;letter-spacing:3px;text-transform:uppercase;color:#2B484E">Formas de pago</div>'
+    +'<div style="margin-top:18px;font-size:25px;line-height:1.55;color:#3a352b">'+pagoItems+'</div></div>'
+    +'<div style="flex:1"><div style="font-family:\'Courier Prime\',monospace;font-size:20px;letter-spacing:3px;text-transform:uppercase;color:#2B484E">Opcionales</div>'
+    +'<div style="margin-top:18px;font-size:25px;line-height:1.7;color:#3a352b">'+opcionalesItems+'</div></div>'
     +'</div>'
-    +'<script>window.onload=function(){window.print();}<\/script>'
+    +'<div style="margin-top:50px;border-top:1.5px solid #2B484E;border-bottom:1.5px solid #2B484E;padding:34px 0;display:flex;align-items:center;gap:24px">'
+    +'<span style="color:#2B484E;font-size:54px;line-height:1">★</span>'
+    +'<div><div style="font-family:\'Bodoni Moda\',serif;font-style:italic;font-size:42px;color:#22201B">Nomadic Club</div>'
+    +'<div style="font-size:24px;color:#3a352b;margin-top:6px;max-width:760px">Sumás puntos canjeables por descuentos y experiencias. <b>1 punto = 1 '+mon+'</b> en compras dentro de Nomádica.</div>'
+    +'</div></div>'
+    +'<div style="margin-top:26px;font-family:\'Courier Prime\',monospace;font-size:17px;letter-spacing:.5px;color:#8a8170;line-height:1.7">'+disc+'</div>'
+    +((vendedor||cliente)?'<div style="margin-top:14px;font-family:\'Courier Prime\',monospace;font-size:17px;color:#8a8170">Preparado por <b>'+(vendedor||'Nomádica')+'</b>'+(cliente?' para <b>'+cliente+'</b>':'')+'.</div>':'')
+    +'<div style="flex:1"></div>'
+    +'<div style="display:flex;justify-content:space-between;align-items:baseline;padding:26px 0 30px;border-top:1.5px solid rgba(34,32,27,.25)">'
+    +'<div style="font-family:\'Bodoni Moda\',serif;font-size:28px;color:#22201B">Nomádica Viajes</div>'
+    +'<div style="font-family:\'Courier Prime\',monospace;font-size:18px;color:#8a8170;text-align:right">Cofico, Córdoba · @nomadicaviajes · Legajo 19126</div>'
+    +'</div></div></div>'
     +'</body></html>';
 
   var win=window.open('','_blank');
-  if(!win){alert('Permite ventanas emergentes para generar el PDF.');return;}
-  win.document.write(pdfHTML);
+  if(!win){alert('Permitá ventanas emergentes para generar el HTML.');return;}
+  win.document.write(html);
   win.document.close();
 }
 
