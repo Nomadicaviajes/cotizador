@@ -785,7 +785,7 @@ function generarHTML(){
   var incluyeRows='';
   function incluyeFila(nombre,detalle,last){
     return '<div style="background-color:#F4ECDB;display:flex;justify-content:space-between;align-items:baseline;padding:30px 0;border-top:1.5px solid #c9bfaa'+(last?';border-bottom:1.5px solid #c9bfaa':'')+'">'
-      +'<span style="font-family:\'Bodoni Moda\',serif;font-size:40px;color:#22201B">'+nombre+'</span>'
+      +'<span style="font-family:Aileron,sans-serif;font-size:40px;color:#22201B">'+nombre+'</span>'
       +'<span style="font-family:\'Courier Prime\',monospace;font-size:24px;color:#8a8170">'+detalle+'</span>'
       +'</div>';
   }
@@ -815,7 +815,7 @@ function generarHTML(){
     var aer0=$('aAer'+aereos[0])&&$('aAer'+aereos[0]).value||'';
     var detContent='';
     if(aereoImgData){
-      detContent='<div style="padding:24px 38px"><img src="'+aereoImgData+'" style="max-width:100%;border-radius:4px"></div>';
+      detContent='<img src="'+aereoImgData+'" style="max-width:100%;display:block">';
     } else {
       aereos.forEach(function(aid){
         var det=$('aDet'+aid)&&$('aDet'+aid).value||'';
@@ -824,11 +824,11 @@ function generarHTML(){
       if(!detContent)detContent='<div style="padding:24px 38px;font-size:24px;color:#8a8170;font-style:italic">Ver itinerario adjunto.</div>';
     }
     vuelosSection='<div style="display:flex;align-items:baseline;gap:30px;margin-top:60px">'
-      +'<div style="font-family:\'Bodoni Moda\',serif;font-size:130px;font-weight:600;color:#2B484E;line-height:.8">02</div>'
-      +'<div style="font-family:\'Bodoni Moda\',serif;font-style:italic;font-size:72px;color:#22201B">Vuelos</div>'
+      +'<div style="font-family:\'Playfair Display\',serif;font-size:130px;font-weight:800;color:#2B484E;line-height:.8">02</div>'
+      +'<div style="font-family:\'Playfair Display\',serif;font-style:italic;font-size:72px;color:#22201B">Vuelos</div>'
       +(aer0?'<div style="font-family:\'Courier Prime\',monospace;font-size:22px;color:#8a8170;letter-spacing:2px;text-transform:uppercase;align-self:center;margin-left:auto">'+aer0+'</div>':'')
       +'</div>'
-      +'<div style="margin-top:38px;border:1.5px solid rgba(43,72,78,.3);background:rgba(255,255,255,.5)">'+detContent+'</div>';
+      +'<div style="margin-top:38px">'+detContent+'</div>';
   }
 
   // Alojamiento rows
@@ -845,10 +845,10 @@ function generarHTML(){
       var tr=tipoTarifa==='persona'?t.ppT:t.totT;
       var borderB=idx<hoteles.length-1?';border-bottom:1.5px solid #c9bfaa':'';
       alojRows+='<div style="background-color:#F4ECDB;display:flex;align-items:flex-end;padding:28px 0;border-top:1.5px solid #c9bfaa'+borderB+'">'
-        +'<div style="flex:1.5"><div style="font-family:\'Bodoni Moda\',serif;font-size:42px;color:#22201B">'+nom+'</div>'
+        +'<div style="flex:1.5"><div style="font-family:Aileron,sans-serif;font-size:42px;color:#22201B">'+nom+'</div>'
         +((cat||reg)?'<div style="font-family:\'Courier Prime\',monospace;font-size:19px;text-transform:uppercase;letter-spacing:2px;color:#8a8170;margin-top:6px">'+(cat?cat+(reg?' · ':'')+reg:reg)+'</div>':'')
         +'</div>'
-        +'<div style="flex:1;text-align:right"><div style="font-family:\'Bodoni Moda\',serif;font-size:48px;font-weight:600;color:#22201B">'+mon+' '+fmt(ef)+'</div>'
+        +'<div style="flex:1;text-align:right"><div style="font-family:Aileron,sans-serif;font-size:48px;font-weight:700;color:#22201B">'+mon+' '+fmt(ef)+'</div>'
         +'<div style="font-size:23px;color:#8a8170">transf. '+mon+' '+fmt(tr)+'</div></div>'
         +'</div>';
     });
@@ -863,9 +863,9 @@ function generarHTML(){
         return dnom+': '+($('hNom'+hid)&&$('hNom'+hid).value||'Hotel');
       }).join(' + ');
       alojRows+='<div style="background-color:#F4ECDB;display:flex;align-items:flex-end;padding:28px 0;border-top:1.5px solid #c9bfaa">'
-        +'<div style="flex:1.5"><div style="font-family:\'Bodoni Moda\',serif;font-size:42px;color:#22201B">Combinación #'+(idx+1)+'</div>'
+        +'<div style="flex:1.5"><div style="font-family:Aileron,sans-serif;font-size:42px;color:#22201B">Combinación #'+(idx+1)+'</div>'
         +'<div style="font-family:\'Courier Prime\',monospace;font-size:19px;text-transform:uppercase;letter-spacing:2px;color:#8a8170;margin-top:6px">'+lbl+'</div></div>'
-        +'<div style="flex:1;text-align:right"><div style="font-family:\'Bodoni Moda\',serif;font-size:48px;font-weight:600;color:#22201B">'+mon+' '+fmt(ef)+'</div>'
+        +'<div style="flex:1;text-align:right"><div style="font-family:Aileron,sans-serif;font-size:48px;font-weight:700;color:#22201B">'+mon+' '+fmt(ef)+'</div>'
         +'<div style="font-size:23px;color:#8a8170">transf. '+mon+' '+fmt(tr)+'</div></div>'
         +'</div>';
     });
@@ -892,55 +892,60 @@ function generarHTML(){
     +'<title>Cotización Nomádica — '+destino+'</title>'
     +'<link rel="preconnect" href="https://fonts.googleapis.com">'
     +'<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
-    +'<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;0,6..96,600;0,6..96,700;1,6..96,400;1,6..96,500;1,6..96,600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Hanken+Grotesk:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">'
-    +'<style>*{box-sizing:border-box;margin:0;padding:0;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}body{background:#d8d4cc;font-family:\'Hanken Grotesk\',sans-serif}'
-    +'.page{width:1080px;height:1920px;margin:0 auto 36px;position:relative;overflow:hidden;box-shadow:0 12px 44px rgba(0,0,0,.18)}'
-    +'@media print{@page{size:1080px 1920px;margin:0}body{background:#fff}.page{margin:0;box-shadow:none;break-after:page}.page:last-child{break-after:auto}}'
+    +'<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Courier+Prime:ital,wght@0,400;0,700&family=Hanken+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">'
+    +'<style>'
+    +'@font-face{font-family:Aileron;font-weight:300;font-style:normal;src:url("https://nomadicaviajes.github.io/cotizador/Aileron-Light.woff2") format("woff2")}'
+    +'@font-face{font-family:Aileron;font-weight:400;font-style:normal;src:url("https://nomadicaviajes.github.io/cotizador/Aileron-Regular.woff2") format("woff2")}'
+    +'@font-face{font-family:Aileron;font-weight:700;font-style:normal;src:url("https://nomadicaviajes.github.io/cotizador/Aileron-Bold.woff2") format("woff2")}'
+    +'*{box-sizing:border-box;margin:0;padding:0;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}body{background:#d8d4cc;font-family:Aileron,sans-serif}'
+    +'.page{width:1080px;margin:0 auto 36px;position:relative;box-shadow:0 12px 44px rgba(0,0,0,.18)}'
+    +'.page-fixed{height:1920px;overflow:hidden}'
+    +'.page-flow{min-height:1920px}'
+    +'@media print{@page{size:1080px 1920px;margin:0}body{background:#fff}.page{margin:0;box-shadow:none;break-after:page;page-break-after:always}.page:last-child{break-after:auto;page-break-after:auto}}'
     +'</style></head><body>'
 
     // PAGE 1 · PORTADA
-    +'<div class="page" style="-webkit-print-color-adjust:exact;print-color-adjust:exact;background-color:#1E3539;color:#EFE3CC;font-family:\'Hanken Grotesk\',sans-serif">'
+    +'<div class="page page-fixed" style="-webkit-print-color-adjust:exact;print-color-adjust:exact;background-color:#1E3539;color:#EFE3CC;font-family:\'Hanken Grotesk\',sans-serif">'
     +'<div style="-webkit-print-color-adjust:exact;print-color-adjust:exact;position:absolute;inset:0;background-color:#1E3539"></div>'
     +'<div style="position:absolute;inset:46px;border:1.5px solid rgba(216,161,43,.55);pointer-events:none"></div>'
     +'<div style="position:relative;padding:96px;height:100%;display:flex;flex-direction:column;text-align:center;align-items:center">'
-    +'<div style="font-family:\'Courier Prime\',monospace;font-size:28px;letter-spacing:9px;text-transform:uppercase;color:#D8A12B;white-space:nowrap">Nomádica Viajes</div>'
-    +'<div style="font-family:\'Courier Prime\',monospace;font-size:30px;letter-spacing:4px;text-transform:uppercase;color:rgba(239,227,204,.6);margin-top:22px;white-space:nowrap">Cotización · '+mesAnio+'</div>'
+    +'<div style="font-family:\'Playfair Display\',serif;font-size:28px;letter-spacing:9px;text-transform:uppercase;color:#D8A12B;white-space:nowrap">Nomádica Viajes</div>'
+    +'<div style="font-family:\'Playfair Display\',serif;font-size:30px;letter-spacing:4px;text-transform:uppercase;color:rgba(239,227,204,.6);margin-top:22px;white-space:nowrap">Cotización ·'+mesAnio+'</div>'
     +'<div style="flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center">'
-    +'<div style="font-family:\'Courier Prime\',monospace;font-size:22px;letter-spacing:6px;text-transform:uppercase;color:rgba(239,227,204,.7)">El viaje</div>'
-    +'<div style="font-family:\'Bodoni Moda\',serif;font-style:italic;font-weight:500;font-size:'+destFontSize+'px;line-height:.88;letter-spacing:-3px;color:#EFE3CC;margin:10px 0 6px">'+destino+'</div>'
+    +'<div style="font-family:\'Playfair Display\',serif;font-size:22px;letter-spacing:6px;text-transform:uppercase;color:rgba(239,227,204,.7)">El viaje</div>'
+    +'<div style="font-family:\'Playfair Display\',serif;font-style:italic;font-weight:500;font-size:'+destFontSize+'px;line-height:.88;letter-spacing:-3px;color:#EFE3CC;margin:10px 0 6px">'+destino+'</div>'
     +'<div style="width:120px;height:1.5px;background:#D8A12B;margin:30px 0"></div>'
     +(bajada?'<div style="font-family:\'Cormorant Garamond\',serif;font-style:italic;font-size:46px;color:rgba(239,227,204,.85)">'+bajada+'</div>':'')
     +'</div>'
     +'<div style="display:flex;gap:78px;font-family:\'Courier Prime\',monospace;color:rgba(239,227,204,.85);margin-bottom:26px;align-items:stretch">'
-    +'<div><div style="font-size:32px;letter-spacing:4px;text-transform:uppercase;color:#D8A12B">Fechas</div><div style="font-family:\'Bodoni Moda\',serif;font-size:38px;margin-top:12px;color:#EFE3CC">'+fechaRango()+'</div></div>'
+    +'<div><div style="font-family:\'Playfair Display\',serif;font-size:32px;letter-spacing:4px;text-transform:uppercase;color:#D8A12B">Fechas</div><div style="font-family:\'Playfair Display\',serif;font-size:38px;margin-top:12px;color:#EFE3CC">'+fechaRango()+'</div></div>'
     +'<div style="width:1px;background:rgba(216,161,43,.4)"></div>'
-    +'<div><div style="font-size:32px;letter-spacing:4px;text-transform:uppercase;color:#D8A12B">Estadía</div><div style="font-family:\'Bodoni Moda\',serif;font-size:38px;margin-top:12px;color:#EFE3CC">'+noches+' noches</div></div>'
+    +'<div><div style="font-family:\'Playfair Display\',serif;font-size:32px;letter-spacing:4px;text-transform:uppercase;color:#D8A12B">Estadía</div><div style="font-family:\'Playfair Display\',serif;font-size:38px;margin-top:12px;color:#EFE3CC">'+noches+' noches</div></div>'
     +'<div style="width:1px;background:rgba(216,161,43,.4)"></div>'
-    +'<div><div style="font-size:32px;letter-spacing:4px;text-transform:uppercase;color:#D8A12B">Desde</div><div style="font-family:\'Bodoni Moda\',serif;font-size:38px;margin-top:12px;color:#EFE3CC">'+(precioDesde!==null?mon+' '+fmt(precioDesde):'—')+'</div></div>'
+    +'<div><div style="font-family:\'Playfair Display\',serif;font-size:32px;letter-spacing:4px;text-transform:uppercase;color:#D8A12B">Desde</div><div style="font-family:\'Playfair Display\',serif;font-size:38px;margin-top:12px;color:#EFE3CC">'+(precioDesde!==null?mon+' '+fmt(precioDesde):'—')+'</div></div>'
     +'</div>'
     +'</div></div>'
 
     // PAGE 2 · INCLUYE + VUELOS
-    +'<div class="page" style="-webkit-print-color-adjust:exact;print-color-adjust:exact;background-color:#F4ECDB;color:#22201B;font-family:\'Hanken Grotesk\',sans-serif">'
-    +'<div style="padding:90px 88px;height:100%;display:flex;flex-direction:column">'
+    +'<div class="page page-flow" style="-webkit-print-color-adjust:exact;print-color-adjust:exact;background-color:#F4ECDB;color:#22201B;font-family:\'Hanken Grotesk\',sans-serif">'
+    +'<div style="padding:90px 88px;display:flex;flex-direction:column">'
     +'<div style="display:flex;justify-content:space-between;align-items:baseline;font-family:\'Courier Prime\',monospace;font-size:20px;letter-spacing:4px;text-transform:uppercase;color:#8a8170"><span>'+destino+'</span><span>Nomádica · 02</span></div>'
     +'<div style="display:flex;align-items:baseline;gap:30px;margin-top:70px">'
-    +'<div style="font-family:\'Bodoni Moda\',serif;font-size:130px;font-weight:600;color:#2B484E;line-height:.8">01</div>'
-    +'<div style="font-family:\'Bodoni Moda\',serif;font-style:italic;font-size:72px;color:#22201B">Incluye</div>'
+    +'<div style="font-family:\'Playfair Display\',serif;font-size:130px;font-weight:800;color:#2B484E;line-height:.8">01</div>'
+    +'<div style="font-family:\'Playfair Display\',serif;font-style:italic;font-size:72px;color:#22201B">Incluye</div>'
     +'</div>'
     +'<div style="margin-top:46px;display:flex;flex-direction:column">'+incluyeRows+'</div>'
     +vuelosSection
-    +'<div style="flex:1"></div>'
-    +'<div style="text-align:center;font-family:\'Cormorant Garamond\',serif;font-style:italic;font-size:34px;color:#8a8170">Nomádica Viajes — Dónde empieza tu aventura</div>'
+    +'<div style="margin-top:60px;text-align:center;font-family:\'Cormorant Garamond\',serif;font-style:italic;font-size:34px;color:#8a8170">Nomádica Viajes — Dónde empieza tu aventura</div>'
     +'</div></div>'
 
     // PAGE 3 · ALOJAMIENTO + PAGO + CLUB
-    +'<div class="page" style="-webkit-print-color-adjust:exact;print-color-adjust:exact;background-color:#F4ECDB;color:#22201B;font-family:\'Hanken Grotesk\',sans-serif">'
-    +'<div style="padding:90px 88px 0;height:100%;display:flex;flex-direction:column">'
+    +'<div class="page page-flow" style="-webkit-print-color-adjust:exact;print-color-adjust:exact;background-color:#F4ECDB;color:#22201B;font-family:\'Hanken Grotesk\',sans-serif">'
+    +'<div style="padding:90px 88px;display:flex;flex-direction:column">'
     +'<div style="display:flex;justify-content:space-between;align-items:baseline;font-family:\'Courier Prime\',monospace;font-size:20px;letter-spacing:4px;text-transform:uppercase;color:#8a8170"><span>'+destino+'</span><span>Nomádica · 03</span></div>'
     +'<div style="display:flex;align-items:baseline;gap:30px;margin-top:60px">'
-    +'<div style="font-family:\'Bodoni Moda\',serif;font-size:120px;font-weight:600;color:#2B484E;line-height:.8">'+alojNum+'</div>'
-    +'<div style="font-family:\'Bodoni Moda\',serif;font-style:italic;font-size:66px;color:#22201B">Alojamiento</div>'
+    +'<div style="font-family:\'Playfair Display\',serif;font-size:120px;font-weight:800;color:#2B484E;line-height:.8">'+alojNum+'</div>'
+    +'<div style="font-family:\'Playfair Display\',serif;font-style:italic;font-size:66px;color:#22201B">Alojamiento</div>'
     +'<div style="font-family:\'Courier Prime\',monospace;font-size:20px;color:#8a8170;letter-spacing:2px;text-transform:uppercase;align-self:center;margin-left:auto">'+tarifaLbl+'</div>'
     +'</div>'
     +(alojRows?'<div style="margin-top:38px">'+alojRows+'</div>':'')
@@ -958,9 +963,8 @@ function generarHTML(){
     +'</div></div>'
     +'<div style="margin-top:26px;font-family:\'Courier Prime\',monospace;font-size:17px;letter-spacing:.5px;color:#8a8170;line-height:1.7">'+disc+'</div>'
     +((vendedor||cliente)?'<div style="margin-top:14px;font-family:\'Courier Prime\',monospace;font-size:17px;color:#8a8170">Preparado por <b>'+(vendedor||'Nomádica')+'</b>'+(cliente?' para <b>'+cliente+'</b>':'')+'.</div>':'')
-    +'<div style="flex:1"></div>'
-    +'<div style="display:flex;justify-content:space-between;align-items:baseline;padding:26px 0 30px;border-top:1.5px solid rgba(34,32,27,.25)">'
-    +'<div style="font-family:\'Bodoni Moda\',serif;font-size:28px;color:#22201B">Nomádica Viajes</div>'
+    +'<div style="margin-top:50px;display:flex;justify-content:space-between;align-items:baseline;padding:26px 0 30px;border-top:1.5px solid rgba(34,32,27,.25)">'
+    +'<div style="font-family:Aileron,sans-serif;font-size:28px;color:#22201B">Nomádica Viajes</div>'
     +'<div style="font-family:\'Courier Prime\',monospace;font-size:18px;color:#8a8170;text-align:right">Cofico, Córdoba · @nomadicaviajes · Legajo 19126</div>'
     +'</div></div></div>'
     +'</body></html>';
