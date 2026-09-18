@@ -731,8 +731,7 @@ function generarWA(){
   txt+='💵 FORMAS DE PAGO\n';
   if(C.aerFin>0)txt+='-Seña: para garantizar la reserva (precio de los vuelos) – '+mon+' '+fmt(C.aerFin)+' en total por todos los pasajeros.\n';
   txt+='-Saldo: hasta un mes antes del viaje.\n\nSe tiene hasta 30 días antes de viajar para terminar de saldar el 100% del total de la reserva. Se pueden ir haciendo entregas parciales del monto que decida el pasajero.\n\n';
-  txt+='🛑INFORMACIÓN ADICIONAL\n*Tarifas para abonar con '+mon+' billete, depósito o transferencia.\n*Tarifas sujetas a confirmación de disponibilidad al momento de reservar.\n*Tarifas no reembolsables en caso de cancelación\n';
-  if($('chkAereo').checked)txt+='*Los vuelos incluyen equipaje tipo carry on en cabina, no en bodega. No incluye selección anticipada de asientos.\n';
+txt+='🛑INFORMACIÓN ADICIONAL\n*Tarifas para abonar con '+mon+' billete, depósito o transferencia.\n*Tarifas sujetas a confirmación de disponibilidad al momento de reservar.\n*Servicios aéreos permiten cambios con costo / No permiten devolución. Consultar política de cambio / cancelación de servicios terrestres.\n*No incluye selección de asientos.\n*Documentación: es responsabilidad del pasajero verificar la validez de su pasaporte, DNI, visas y/o vacunas según su destino. En caso de pérdida de algún documento migratorio en destino, el pasajero deberá resolverlo en alguna embajada u oficina correspondiente.\n*Los menores saliendo del país con ambos padres deberán presentar libreta de familia o partida de nacimiento. Si salen con un sólo progenitor, o con otro adulto, deberán contar con autorización ante escribano.\n*No se incluyen las tasas turísticas, medioambientales, o resorts fee que se abonan a la llegada en algunos destinos.\n*No se garantizan los tipos de cama; las mismas están sujetas según disponibilidad al momento del check in.\n';
   txt+='\n-----\nInstagram: https://www.instagram.com/nomadicaviajes/\nWeb: https://nomadicaviajes.com.ar/';
   $('waText').value=txt;$('waModal').classList.add('open');
 }
@@ -882,7 +881,7 @@ function generarHTML(){
   opcionalesItems+='<div>Excursiones locales</div><div>Traslados privados</div><div>Upgrade de habitación</div>';
 
   // Disclaimer
-  var disc='Tarifas en '+mon+' billete, depósito o transferencia · Sujetas a confirmación de disponibilidad · No reembolsables ante cancelación'+($('chkAereo').checked?' · Carry on en cabina, sin selección de asientos.':'.');
+var disc='Tarifas para abonar con '+mon+' billete, depósito o transferencia · Tarifas sujetas a confirmación de disponibilidad al momento de reservar · Servicios aéreos permiten cambios con costo / No permiten devolución. Consultar política de cambio / cancelación de servicios terrestres · No incluye selección de asientos · Documentación: es responsabilidad del pasajero verificar la validez de su pasaporte, DNI, visas y/o vacunas según su destino. En caso de pérdida de algún documento migratorio en destino, el pasajero deberá resolverlo en alguna embajada u oficina correspondiente · Los menores saliendo del país con ambos padres deberán presentar libreta de familia o partida de nacimiento. Si salen con un sólo progenitor, o con otro adulto, deberán contar con autorización ante escribano · No se incluyen las tasas turísticas, medioambientales, o resorts fee que se abonan a la llegada en algunos destinos · No se garantizan los tipos de cama; las mismas están sujetas según disponibilidad al momento del check in.';
 
   // Destino font size adaptativo
   var destFontSize=destino.length<=6?184:destino.length<=9?140:destino.length<=13?110:80;
