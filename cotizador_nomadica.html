@@ -579,10 +579,8 @@ function buildResumen(){
   }
   function totalesHTML(t){
     var mon=C.mon;
-    return '<div class="srow stotal"><span>Total grupo · Efectivo ('+C.paxT+' pax)</span><span>'+mon+' '+fmt(t.tot)+'</span></div>'
-      +'<div class="srow stransfer"><span>Total grupo · Transferencia (+1.5%)</span><span>'+mon+' '+fmt(t.totT)+'</span></div>'
-      +'<div class="srow stotal"><span>Total por persona · Efectivo</span><span>'+mon+' '+fmt(t.pp)+'</span></div>'
-      +'<div class="srow stransfer"><span>Total por persona · Transferencia</span><span>'+mon+' '+fmt(t.ppT)+'</span></div>'
+    return '<div class="srow stotal"><span>Total grupo ('+C.paxT+' pax)</span><span>'+mon+' '+fmt(t.totT)+'</span></div>'
+      +'<div class="srow stotal"><span>Total por persona</span><span>'+mon+' '+fmt(t.ppT)+'</span></div>'
       +'<div style="border-top:2px solid #c8881a;margin:4px 0"></div>'
       +'<div class="srow" style="background:#faf8f0"><span>Costo aéreos</span><span>'+mon+' '+fmt(t.costoAereo)+'</span></div>'
       +'<div class="srow" style="background:#faf8f0"><span>Costo aprox. terrestre</span><span>'+mon+' '+fmt(t.costoTerrestre)+'</span></div>'
@@ -601,7 +599,7 @@ function buildResumen(){
       combos.forEach(function(hids,idx){
         var t=totalConHoteles(hids);
         var labels=hids.map(function(hid,di){var dnom=$('dNom'+destinos[di].id)&&$('dNom'+destinos[di].id).value||'Destino';var nom=$('hNom'+hid)&&$('hNom'+hid).value||'Hotel';var cat=$('hCat'+hid)&&$('hCat'+hid).value||'';return dnom+': '+nom+(cat?' ('+cat+')':'');}).join(' + ');
-        html+='<div class="sh-card"><div class="sh-hdr">Combinacion #'+(idx+1)+' <span>'+mon+' '+fmt(t.tot)+'</span></div>'
+        html+='<div class="sh-card"><div class="sh-hdr">Combinacion #'+(idx+1)+' <span>'+mon+' '+fmt(t.totT)+'</span></div>'
           +'<div class="srow ssub"><span>'+labels+'</span></div>'
           +hids.map(function(hid){var nom=$('hNom'+hid)&&$('hNom'+hid).value||'Hotel';var reg=$('hReg'+hid)&&$('hReg'+hid).value||'',cat=$('hCat'+hid)&&$('hCat'+hid).value||'';return '<div class="srow"><span>'+nom+(cat?' · '+cat:'')+'</span><span>'+reg+' · '+mon+' '+fmt(val('hTar'+hid))+'</span></div>';}).join('')
           +totalesHTML(t)+'</div>';
@@ -674,6 +672,15 @@ function delH(id){
 }
 function limpiar(){if(confirm('Limpiar todo?'))location.reload();}
 
+function textoPax(C){
+  var p=[];
+  if(C.adultos)p.push(C.adultos+(C.adultos===1?' persona adulta':' personas adultas'));
+  if(C.ninos)p.push(C.ninos+(C.ninos===1?' menor':' menores'));
+  if(C.infantes)p.push(C.infantes+(C.infantes===1?' infante':' infantes'));
+  if(!p.length)return '';
+  var s=p.length>1?p.slice(0,-1).join(', ')+' y '+p[p.length-1]:p[0];
+  return 'Cotización a base de '+s+'.';
+}
 function fmtFecha(v){if(!v)return'—';var p=v.split('-');var m=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];return parseInt(p[2])+' de '+m[parseInt(p[1])-1];}
 
 function generarWA(){
@@ -701,16 +708,16 @@ function generarWA(){
       var cat=$('hCat'+id)&&$('hCat'+id).value||'';
       var reg=$('hReg'+id)&&$('hReg'+id).value||'';
       var t=totalConHoteles([id]);
-      var ef=tipoTarifa==='persona'?t.pp:t.tot,tr=tipoTarifa==='persona'?t.ppT:t.totT;
+      var tr=tipoTarifa==='persona'?t.ppT:t.totT;
       var lbl=tipoTarifa==='persona'?'Precio final por persona':'Precio final por grupo familiar';
-      txt+='🛎 '+nom+'\n'+(cat?'Habitación '+cat+'\n':'')+(reg?'Régimen: '+reg+'\n':'')+lbl+':\n💵 Efectivo: '+mon+' '+fmt(ef)+'\n🏦 Transferencia: '+mon+' '+fmt(tr)+'\n\n';
+      txt+='🛎 '+nom+'\n'+(cat?'Habitación '+cat+'\n':'')+(reg?'Régimen: '+reg+'\n':'')+'*'+lbl+': '+mon+' '+fmt(tr)+'*\n\n';
     });
   } else {
     var combos=getCombinaciones();
     if(combos&&combos.length>0){
       combos.forEach(function(hids,idx){
         var t=totalConHoteles(hids);
-        var ef=tipoTarifa==='persona'?t.pp:t.tot,tr=tipoTarifa==='persona'?t.ppT:t.totT;
+        var tr=tipoTarifa==='persona'?t.ppT:t.totT;
         var lbl=tipoTarifa==='persona'?'Precio final por persona':'Precio final por grupo familiar';
         txt+='*Combinación #'+(idx+1)+'*\n';
         hids.forEach(function(hid,di){
@@ -720,10 +727,12 @@ function generarWA(){
           var reg=$('hReg'+hid)&&$('hReg'+hid).value||'';
           txt+='🛎 '+dnom+': '+nom+(cat?' · '+cat:'')+(reg?' · '+reg:'')+'\n';
         });
-        txt+=lbl+':\n💵 Efectivo: '+mon+' '+fmt(ef)+'\n🏦 Transferencia: '+mon+' '+fmt(tr)+'\n\n';
+        txt+='*'+lbl+': '+mon+' '+fmt(tr)+'*\n\n';
       });
     }
   }
+  var paxTxt=textoPax(C);
+  if(paxTxt)txt+='_'+paxTxt+'_\n';
   txt+='\n----------\nSumá puntos y canjealos por futuros viajes.\n*¿Qué es Nomadic Club?*\nhttps://www.nomadicaviajes.com.ar/nomadic-club\n----------\n\n';
   txt+='Servicios opcionales:\n';
   if(!$('chkAsist').checked)txt+='💊 Asistencia al viajero.\n*Hasta 6 cuotas sin interés: Coris, Assist Card o Universal Assistance.\n';
@@ -773,10 +782,10 @@ function generarHTML(){
   // Precio desde
   var precioDesde=null;
   if(modo==='simple'&&hoteles.length>0){
-    hoteles.forEach(function(h){var t=totalConHoteles([h.id]);var p=tipoTarifa==='persona'?t.pp:t.tot;if(precioDesde===null||p<precioDesde)precioDesde=p;});
+    hoteles.forEach(function(h){var t=totalConHoteles([h.id]);var p=tipoTarifa==='persona'?t.ppT:t.totT;if(precioDesde===null||p<precioDesde)precioDesde=p;});
   } else if(modo==='combo'){
     var combosP=getCombinaciones();
-    if(combosP)combosP.forEach(function(hids){var t=totalConHoteles(hids);var p=tipoTarifa==='persona'?t.pp:t.tot;if(precioDesde===null||p<precioDesde)precioDesde=p;});
+    if(combosP)combosP.forEach(function(hids){var t=totalConHoteles(hids);var p=tipoTarifa==='persona'?t.ppT:t.totT;if(precioDesde===null||p<precioDesde)precioDesde=p;});
   }
   var tarifaLbl=tipoTarifa==='persona'?'por persona':'por grupo familiar';
 
@@ -840,22 +849,19 @@ function generarHTML(){
       var reg=$('hReg'+id)&&$('hReg'+id).value||'';
       var cat=$('hCat'+id)&&$('hCat'+id).value||'';
       var t=totalConHoteles([id]);
-      var ef=tipoTarifa==='persona'?t.pp:t.tot;
       var tr=tipoTarifa==='persona'?t.ppT:t.totT;
       var borderB=idx<hoteles.length-1?';border-bottom:1.5px solid #c9bfaa':'';
       alojRows+='<div style="background-color:#F4ECDB;display:flex;align-items:flex-end;padding:28px 0;border-top:1.5px solid #c9bfaa'+borderB+'">'
         +'<div style="flex:1.5"><div style="font-family:Aileron,sans-serif;font-size:42px;color:#22201B">'+nom+'</div>'
         +((cat||reg)?'<div style="font-family:\'Courier Prime\',monospace;font-size:19px;text-transform:uppercase;letter-spacing:2px;color:#8a8170;margin-top:6px">'+(cat?cat+(reg?' · ':'')+reg:reg)+'</div>':'')
         +'</div>'
-        +'<div style="flex:1;text-align:right"><div style="font-family:Aileron,sans-serif;font-size:48px;font-weight:700;color:#22201B">'+mon+' '+fmt(ef)+'</div>'
-        +'<div style="font-size:23px;color:#8a8170">transf. '+mon+' '+fmt(tr)+'</div></div>'
+        +'<div style="flex:1;text-align:right"><div style="font-family:Aileron,sans-serif;font-size:48px;font-weight:700;color:#22201B">'+mon+' '+fmt(tr)+'</div></div>'
         +'</div>';
     });
   } else {
     var combosH=getCombinaciones();
     if(combosH)combosH.forEach(function(hids,idx){
       var t=totalConHoteles(hids);
-      var ef=tipoTarifa==='persona'?t.pp:t.tot;
       var tr=tipoTarifa==='persona'?t.ppT:t.totT;
       var lbl=hids.map(function(hid,di){
         var dnom=$('dNom'+destinos[di].id)&&$('dNom'+destinos[di].id).value||'Destino';
@@ -864,8 +870,7 @@ function generarHTML(){
       alojRows+='<div style="background-color:#F4ECDB;display:flex;align-items:flex-end;padding:28px 0;border-top:1.5px solid #c9bfaa">'
         +'<div style="flex:1.5"><div style="font-family:Aileron,sans-serif;font-size:42px;color:#22201B">Combinación #'+(idx+1)+'</div>'
         +'<div style="font-family:\'Courier Prime\',monospace;font-size:19px;text-transform:uppercase;letter-spacing:2px;color:#8a8170;margin-top:6px">'+lbl+'</div></div>'
-        +'<div style="flex:1;text-align:right"><div style="font-family:Aileron,sans-serif;font-size:48px;font-weight:700;color:#22201B">'+mon+' '+fmt(ef)+'</div>'
-        +'<div style="font-size:23px;color:#8a8170">transf. '+mon+' '+fmt(tr)+'</div></div>'
+        +'<div style="flex:1;text-align:right"><div style="font-family:Aileron,sans-serif;font-size:48px;font-weight:700;color:#22201B">'+mon+' '+fmt(tr)+'</div></div>'
         +'</div>';
     });
   }
@@ -957,6 +962,7 @@ var disc='<span style="font-weight:700;letter-spacing:1px;display:block;margin-b
     +'</div>'
     +(alojRows?'<div style="margin-top:38px">'+alojRows+'</div>':'')
     +'<div style="font-family:\'Courier Prime\',monospace;font-size:19px;color:#8a8170;margin-top:12px">Precio final del paquete '+(tipoTarifa==='persona'?'por persona':'por grupo familiar')+'</div>'
+    +(textoPax(C)?'<div style="font-family:\'Courier Prime\',monospace;font-size:19px;color:#8a8170;margin-top:6px">'+textoPax(C)+'</div>':'')
     +'<div style="display:flex;gap:56px;margin-top:50px">'
     +'<div style="flex:1"><div style="font-family:\'Courier Prime\',monospace;font-size:20px;letter-spacing:3px;text-transform:uppercase;color:#2B484E">Formas de pago</div>'
     +'<div style="margin-top:18px;font-size:25px;line-height:1.55;color:#3a352b">'+pagoItems+'</div></div>'
